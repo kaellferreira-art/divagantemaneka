@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type VideoMeta = {
   file: string;
   title: string;
-  poster?: string;
 };
 
 type ResolvedVideo = VideoMeta & {
@@ -13,13 +13,9 @@ type ResolvedVideo = VideoMeta & {
 };
 
 const featuredVideoMeta: VideoMeta[] = [
-  { file: "Compilado Esquina D.mp4", title: "Compilado Esquina D", poster: "/images/video-capas/compilado-esquina-d.jpg" },
-  { file: "Compilado Estimada.mp4", title: "Compilado Estimada", poster: "/images/video-capas/compilado-estimada.jpg" },
-  {
-    file: "Rita Lee - Ovelha Negra.mp4",
-    title: "Rita Lee - Ovelha Negra",
-    poster: "/images/video-capas/rita-lee-ovelha-negra.jpg",
-  },
+  { file: "Compilado Esquina D.mp4", title: "Compilado Esquina D" },
+  { file: "Compilado Estimada.mp4", title: "Compilado Estimada" },
+  { file: "Rita Lee - Ovelha Negra.mp4", title: "Rita Lee - Ovelha Negra" },
   { file: "Blitz - A Dois Passos do Paraiso.mp4", title: "Blitz - A Dois Passos do Paraiso" },
   { file: "Cassia Eller - Palavras ao Vento.mp4", title: "Cassia Eller - Palavras ao Vento" },
   { file: "Cidadão Quem - Dia especial.mp4", title: "Cidadão Quem - Dia especial" },
@@ -65,18 +61,79 @@ function drivePreviewUrl(fileId: string): string {
   return `https://drive.google.com/file/d/${fileId}/preview`;
 }
 
+/** Viewport lógico do iframe (16:9); o scale em volta recorta a UI do Drive e preenche o cartão 9:16. */
+const DRIVE_EMBED_W = 640;
+const DRIVE_EMBED_H = 360;
+/** >1 “entra” mais no iframe e corta barras / chrome do preview. */
+const DRIVE_EXTRA_ZOOM = 1.34;
+
+/** Capas em `public/images/video-capas/` com o mesmo nome base do .mp4 (várias extensões). */
+function coverImageCandidates(videoFile: string): string[] {
+  const base = videoFile.replace(/\.mp4$/i, "");
+  const bases = [base];
+  if (base === "Nando Reis - Por onde Andei") bases.push("Nando Reis - Por onde Andei Final");
+  const exts = ["jpg", "jpeg", "JPG", "JPEG", "png", "webp"];
+  const out: string[] = [];
+  for (const b of bases) {
+    for (const e of exts) {
+      out.push(`/images/video-capas/${encodeURIComponent(b)}.${e}`);
+    }
+  }
+  return out;
+}
+
+function DrivePosterWhileLoading({ videoFile, show }: { videoFile: string; show: boolean }) {
+  const urls = useMemo(() => coverImageCandidates(videoFile), [videoFile]);
+  const [idx, setIdx] = useState(0);
+
+  if (!show || idx >= urls.length) return null;
+
+  return (
+    <Image
+      src={urls[idx]}
+      alt=""
+      fill
+      sizes="280px"
+      className="absolute inset-0 z-[1] object-cover"
+      onError={() => setIdx((i) => i + 1)}
+      aria-hidden
+    />
+  );
+}
+
 function DriveVideoFrame({
   driveId,
-  poster,
+  videoFile,
   title,
   interactive,
 }: {
   driveId: string | null;
-  poster?: string;
+  videoFile: string;
   title: string;
   interactive: boolean;
 }) {
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1.45);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+
+  useLayoutEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+
+    const update = () => {
+      const cw = shell.clientWidth;
+      const ch = shell.clientHeight;
+      if (cw < 2 || ch < 2) return;
+      const cover = Math.max(cw / DRIVE_EMBED_W, ch / DRIVE_EMBED_H);
+      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, 1.22), 3.4);
+      setScale(s);
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(shell);
+    return () => ro.disconnect();
+  }, []);
 
   if (!driveId) {
     return (
@@ -88,24 +145,31 @@ function DriveVideoFrame({
   }
 
   return (
-    <div className="relative aspect-[9/16] w-full overflow-hidden bg-black">
-      {poster && !iframeLoaded ? (
+    <div ref={shellRef} className="relative aspect-[9/16] w-full overflow-hidden bg-black">
+      <DrivePosterWhileLoading key={videoFile} videoFile={videoFile} show={Boolean(driveId) && !iframeLoaded} />
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${JSON.stringify(poster)})` }}
-          aria-hidden
-        />
-      ) : null}
-      {/* Drive /preview é landscape com UI extra; ampliamos e recortamos para aproximar do enquadramento 9:16 do vídeo nativo. */}
-      <iframe
-        title={title}
-        src={drivePreviewUrl(driveId)}
-        className="absolute left-1/2 top-[48%] h-[138%] w-[min(340%,96rem)] max-w-none -translate-x-1/2 -translate-y-1/2 border-0 md:top-1/2 md:h-[130%] md:w-[min(300%,80rem)]"
-        allow="autoplay; encrypted-media; fullscreen"
-        loading="lazy"
-        onLoad={() => setIframeLoaded(true)}
-        style={{ pointerEvents: interactive ? "auto" : "none" }}
-      />
+          className="relative shrink-0"
+          style={{
+            width: DRIVE_EMBED_W,
+            height: DRIVE_EMBED_H,
+            transform: `scale(${scale})`,
+            transformOrigin: "center center",
+          }}
+        >
+          <iframe
+            title={title}
+            src={drivePreviewUrl(driveId)}
+            className="absolute inset-0 block h-full w-full border-0"
+            width={DRIVE_EMBED_W}
+            height={DRIVE_EMBED_H}
+            allow="autoplay; encrypted-media; fullscreen"
+            loading="lazy"
+            onLoad={() => setIframeLoaded(true)}
+            style={{ pointerEvents: interactive ? "auto" : "none" }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -253,7 +317,7 @@ export function Gallery() {
                         <span className="shrink-0 text-[0.66rem] uppercase tracking-[0.12em] text-[#F3EDE5]/55">Ao vivo</span>
                       </div>
                       <div className="overflow-hidden rounded-[1.15rem] bg-[#000000]/35">
-                        <DriveVideoFrame driveId={video.driveId} poster={video.poster} title={video.title} interactive={isCenter} />
+                        <DriveVideoFrame driveId={video.driveId} videoFile={video.file} title={video.title} interactive={isCenter} />
                       </div>
                     </article>
                   );
@@ -273,7 +337,7 @@ export function Gallery() {
                   </div>
 
                   <div className="overflow-hidden rounded-2xl bg-[#000000]/35">
-                    <DriveVideoFrame driveId={mobileSlide.driveId} poster={mobileSlide.poster} title={mobileSlide.title} interactive />
+                    <DriveVideoFrame driveId={mobileSlide.driveId} videoFile={mobileSlide.file} title={mobileSlide.title} interactive />
                   </div>
                 </article>
               </div>
