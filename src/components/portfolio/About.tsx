@@ -7,7 +7,8 @@ const ABOUT_SLIDES = [
   {
     imageSrc: "/images/Especial Brasilidades.png",
     imageAlt: "Especial Brasilidades",
-    title: "Release",
+    heading: "Especial Brasilidades",
+    eyebrow: "Release",
     paragraphs: [
       "O especial “Brasilidades” propõe uma viagem pela cultura brasileira, apresentando obras que deixaram sua marca na história.",
       "Uma viagem pelo Pop Rock, MPB, Samba, Reggae e Xote, passeando por canções antigas, com novos arranjos e interpretações, equilibrando emoção e groove!",
@@ -19,8 +20,9 @@ const ABOUT_SLIDES = [
   },
   {
     imageSrc: "/images/Forro da Cacaiada.png?v=2",
-    imageAlt: "Forro da Cacaiada",
-    title: "Release",
+    imageAlt: "Forró da Cacaiada",
+    heading: "Forró da Cacaiada",
+    eyebrow: "Release",
     paragraphs: [
       "Pensa em um forró pra lá de arretado... Coza max linda!",
       "Junta a galera, convida teu par e bora dançar acochado.",
@@ -34,7 +36,8 @@ const ABOUT_SLIDES = [
   {
     imageSrc: "/images/Nutrir e Florescer.png",
     imageAlt: "Nutrir e Florescer",
-    title: "Release",
+    heading: "Nutrir e Florescer",
+    eyebrow: "Release",
     paragraphs: [
       "Um espetáculo para alimentar a alma e estimular o imaginário.",
       "Um convite para respirar fundo e se conectar, consigo, com o outro e com o momento presente.",
@@ -108,9 +111,9 @@ export function About() {
             </p>
             {RESTAURANTES_SECTION.blocks.map((block) => (
               <div key={block.heading} className="space-y-0.5 rounded-xl border border-[#1E1A18]/8 bg-white/30 px-3 py-2">
-                <p className="max-w-2xl text-[0.91rem] font-bold leading-[1.42] text-[#1E1A18]/90 md:text-[0.95rem]">
+                <h3 className="max-w-2xl text-[0.91rem] font-bold leading-[1.42] text-[#1E1A18]/90 md:text-[0.95rem]">
                   {block.heading}
-                </p>
+                </h3>
                 <p className="max-w-2xl text-[0.9rem] leading-[1.42] text-[#1E1A18]/72 md:text-[0.93rem]">{block.text}</p>
               </div>
             ))}
@@ -149,7 +152,8 @@ export function About() {
 
           <div className="space-y-2.5 md:space-y-3">
             <p className="font-sans text-[0.66rem] uppercase tracking-[0.24em] text-[#F2E8DC]/80">Especiais</p>
-            <h2 className="font-serif text-[1.85rem] leading-[1.08] text-[#F2E8DC] sm:text-[2.2rem]">{slide.title}</h2>
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-[#F2E8DC]/78">{slide.eyebrow}</p>
+            <h2 className="font-serif text-[1.85rem] leading-[1.08] text-[#F2E8DC] sm:text-[2.2rem]">{slide.heading}</h2>
             {slide.paragraphs.map((text) => (
               <p key={text} className="max-w-2xl text-[0.9rem] leading-[1.46] text-[#F2E8DC]/86 md:text-[0.94rem]">
                 {text}
@@ -159,7 +163,7 @@ export function About() {
               <a
                 href={slide.teaserUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 pt-1 text-[0.95rem] font-semibold text-[#F2E8DC] transition-colors hover:text-[#F8F2EA]"
               >
                 <Image src="/icons/instagram.svg" alt="" width={20} height={20} className="h-5 w-5 object-contain" />

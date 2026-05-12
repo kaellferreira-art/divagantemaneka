@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 
+import {
+  DEFAULT_PIN_COMPILADO_ESQUINA_D,
+  DEFAULT_PIN_COMPILADO_ESTIMADA,
+  YOUTUBE_PLAYLIST_ID as DEFAULT_PLAYLIST_ID,
+} from "@/lib/youtube-playlist-config";
+
 /**
- * Playlist: `YOUTUBE_PLAYLIST_ID` (opcional; senão usa o default do site).
+ * Playlist: `YOUTUBE_PLAYLIST_ID` (env opcional; senão usa o default do site).
  * Lista completa (opcional): `YOUTUBE_API_KEY` (YouTube Data API v3).
  * Sem API key usa o feed Atom (~15 vídeos). Os dois compilados têm pins por defeito
  * (fora do Atom); `YOUTUBE_PIN_COMPILADO_ESQUINA_D` / `YOUTUBE_PIN_COMPILADO_ESTIMADA`
  * substituem esses IDs se definidos.
  */
-const DEFAULT_PLAYLIST_ID = "PLSlPvkuCbGCS2w5I4G_3oqVFVOicWjwpf";
-
-/** Índices 14 e 15 na playlist “Site”; o feed Atom não os inclui. */
-const DEFAULT_PIN_COMPILADO_ESQUINA_D = "2bkpl87MPoU";
-const DEFAULT_PIN_COMPILADO_ESTIMADA = "t7BBI4knYnc";
 
 type Video = { id: string; name: string };
 

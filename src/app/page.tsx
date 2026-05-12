@@ -1,6 +1,6 @@
 import { About } from "@/components/portfolio/About";
 import { Footer } from "@/components/portfolio/Footer";
-import { Gallery } from "@/components/portfolio/Gallery";
+import { GallerySection } from "@/components/portfolio/GallerySection";
 import { Hero } from "@/components/portfolio/Hero";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <main className="flex-1">
         <Hero />
-        <Gallery />
+        <GallerySection />
         <About />
       </main>
       <Footer />

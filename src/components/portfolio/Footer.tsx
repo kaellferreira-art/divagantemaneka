@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const navLinks = [
-  { href: "#inicio", label: "Inicio" },
+  { href: "#inicio", label: "Início" },
   { href: "#obras", label: "Registros ao vivo" },
   { href: "#sobre", label: "Repertórios e Especiais" },
   { href: "#contato", label: "Contato" },
@@ -64,7 +64,7 @@ export function Footer() {
                 <a
                   href={social.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-3 transition-colors duration-500 hover:text-[#D9A441]"
                 >
                   <Image

@@ -3,76 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-type VideoMeta = {
-  /** Nome de apresentação no cartão e base da capa local em `public/images/video-capas/`. */
-  title: string;
-  /**
-   * Termos para casar com o título do vídeo no YouTube (case e acento-insensíveis).
-   * Cobre tanto títulos "limpos" (`Artista - Música`) como uploads de Shorts com hashtags.
-   */
-  keywords: string[];
-};
-
-type ResolvedVideo = VideoMeta & {
-  youtubeId: string | null;
-};
-
-const featuredVideoMeta: VideoMeta[] = [
-  {
-    title: "Compilado Esquina D",
-    keywords: ["compilado esquina d", "compilado esquina", "esquina d", "esquinad", "esquina d."],
-  },
-  { title: "Compilado Estimada", keywords: ["compilado estimada", "compilado estim", "estimada"] },
-  { title: "Rita Lee - Ovelha Negra", keywords: ["rita lee", "ritalee", "ovelha negra"] },
-  { title: "Blitz - A Dois Passos do Paraiso", keywords: ["blitz", "dois passos", "paraiso"] },
-  { title: "Cassia Eller - Palavras ao Vento", keywords: ["cassia eller", "cassiaeller", "palavras ao vento"] },
-  { title: "Cidadão Quem - Dia especial", keywords: ["cidadao quem", "dia especial", "diaespecial"] },
-  { title: "Fagner - Espumas ao vento", keywords: ["fagner", "espumas ao vento"] },
-  { title: "Falamansa - Xote dos Milagres", keywords: ["falamansa", "xote dos milagres"] },
-  {
-    title: "Geraldo Azevedo - Dona da minha cabeça",
-    keywords: ["geraldo azevedo", "geraldoazevedo", "dona da minha cabeca", "donadaminhacabeca"],
-  },
-  { title: "Kid Abelha - Casinha de Sapê", keywords: ["kid abelha", "kidabelha", "casinha de sape"] },
-  {
-    title: "Lulu Santos - Apenas mais uma de amor",
-    keywords: ["lulu santos", "lulusantos", "apenas mais uma", "pois que seja fraqueza"],
-  },
-  { title: "Maskavo - Asas", keywords: ["maskavo"] },
-  { title: "Nando Reis - Por onde Andei", keywords: ["nando reis", "nandoreis", "por onde andei"] },
-  { title: "Rastapé - Colo de Menina", keywords: ["rastape", "colo de menina"] },
-  { title: "Dazaranha - Vagabundo Confesso", keywords: ["dazaranha", "vagabundo confesso"] },
-];
-
-function foldText(s: string): string {
-  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
-
-function resolveVideos(files: { id: string; name: string }[]): ResolvedVideo[] {
-  const folded = files.map((f) => ({ id: f.id, fold: foldText(f.name) }));
-  const taken = new Set<string>();
-
-  return featuredVideoMeta.map((meta) => {
-    const foldedKeywords = meta.keywords.map(foldText).filter(Boolean);
-    let bestId: string | null = null;
-    let bestScore = 0;
-
-    for (const f of folded) {
-      if (taken.has(f.id)) continue;
-      let score = 0;
-      for (const kw of foldedKeywords) {
-        if (f.fold.includes(kw)) score++;
-      }
-      if (score > bestScore) {
-        bestScore = score;
-        bestId = f.id;
-      }
-    }
-
-    if (bestId) taken.add(bestId);
-    return { ...meta, youtubeId: bestId };
-  });
-}
+import { featuredVideoMeta, resolveVideos, type ResolvedGalleryVideo } from "@/lib/gallery";
 
 function youtubeEmbedUrl(videoId: string, autoplay: boolean): string {
   const u = new URL(`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`);
@@ -232,7 +163,7 @@ function useItemsPerPage(): number {
 type GalleryFetchState =
   | { status: "loading" }
   | { status: "error"; message: string }
-  | { status: "ready"; videos: ResolvedVideo[] };
+  | { status: "ready"; videos: ResolvedGalleryVideo[] };
 
 export function Gallery() {
   const itemsPerPage = useItemsPerPage();
@@ -299,15 +230,7 @@ export function Gallery() {
   const isDesktop = itemsPerPage === 3;
 
   return (
-    <section
-      id="obras"
-      className="section-shell rounded-[1.75rem] bg-[radial-gradient(circle_at_50%_15%,rgba(151,147,117,0.92),rgba(132,130,101,0.97)_58%,rgba(119,119,91,1)_100%)] py-16 md:py-20"
-    >
-      <div className="mb-9 text-center md:mb-12">
-        <h2 className="font-serif text-[2rem] leading-tight text-[#F3EDE5] sm:text-[2.5rem]">Registros ao vivo</h2>
-      </div>
-
-      <div className="relative mx-auto max-w-5xl">
+    <div className="relative mx-auto max-w-5xl">
         {fetchState.status === "loading" ? (
           <div className="mx-auto flex min-h-[22rem] max-w-md flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
             <p className="text-sm text-[#F3EDE5]/85">Carregando vídeos…</p>
@@ -401,7 +324,6 @@ export function Gallery() {
             </div>
           </>
         )}
-      </div>
-    </section>
+    </div>
   );
 }
