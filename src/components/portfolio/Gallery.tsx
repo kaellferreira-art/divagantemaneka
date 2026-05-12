@@ -66,6 +66,8 @@ const DRIVE_EMBED_W = 640;
 const DRIVE_EMBED_H = 360;
 /** >1 amplia e recorta a UI do preview para preencher o retângulo 9:16. */
 const DRIVE_EXTRA_ZOOM = 1.34;
+const DRIVE_SCALE_MIN = 1.22;
+const DRIVE_SCALE_MAX = 3.4;
 
 /** Capas em `public/images/video-capas/` com o mesmo nome base do .mp4 (várias extensões). */
 function coverImageCandidates(videoFile: string): string[] {
@@ -125,7 +127,7 @@ function DriveVideoFrame({
       const ch = shell.clientHeight;
       if (cw < 2 || ch < 2) return;
       const cover = Math.max(cw / DRIVE_EMBED_W, ch / DRIVE_EMBED_H);
-      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, 1.22), 3.4);
+      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, DRIVE_SCALE_MIN), DRIVE_SCALE_MAX);
       setScale(s);
     };
 
