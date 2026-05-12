@@ -1,91 +1,125 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type VideoMeta = {
-  file: string;
+  /** Nome de apresentação no cartão e base da capa local em `public/images/video-capas/`. */
   title: string;
+  /**
+   * Termos para casar com o título do vídeo no YouTube (case e acento-insensíveis).
+   * Cobre tanto títulos "limpos" (`Artista - Música`) como uploads de Shorts com hashtags.
+   */
+  keywords: string[];
 };
 
 type ResolvedVideo = VideoMeta & {
-  driveId: string | null;
+  youtubeId: string | null;
 };
 
 const featuredVideoMeta: VideoMeta[] = [
-  { file: "Compilado Esquina D.mp4", title: "Compilado Esquina D" },
-  { file: "Compilado Estimada.mp4", title: "Compilado Estimada" },
-  { file: "Rita Lee - Ovelha Negra.mp4", title: "Rita Lee - Ovelha Negra" },
-  { file: "Blitz - A Dois Passos do Paraiso.mp4", title: "Blitz - A Dois Passos do Paraiso" },
-  { file: "Cassia Eller - Palavras ao Vento.mp4", title: "Cassia Eller - Palavras ao Vento" },
-  { file: "Cidadão Quem - Dia especial.mp4", title: "Cidadão Quem - Dia especial" },
-  { file: "Fagner - Espumas ao vento.mp4", title: "Fagner - Espumas ao vento" },
-  { file: "Falamansa - Xote dos Milagres.mp4", title: "Falamansa - Xote dos Milagres" },
-  { file: "Geraldo Azevedo - Dona da minha cabeça.mp4", title: "Geraldo Azevedo - Dona da minha cabeça" },
-  { file: "Kid Abelha - Casinha de Sapê.mp4", title: "Kid Abelha - Casinha de Sapê" },
-  { file: "Lulu Santos - Apenas mais uma de amor.mp4", title: "Lulu Santos - Apenas mais uma de amor" },
-  { file: "Maskavo - Asas.mp4", title: "Maskavo - Asas" },
-  { file: "Nando Reis - Por onde Andei.mp4", title: "Nando Reis - Por onde Andei" },
-  { file: "Rastapé - Colo de Menina.mp4", title: "Rastapé - Colo de Menina" },
-  { file: "Dazaranha - Vagabundo Confesso.mp4", title: "Dazaranha - Vagabundo Confesso" },
+  { title: "Compilado Esquina D", keywords: ["esquina d", "esquinad"] },
+  { title: "Compilado Estimada", keywords: ["estimada"] },
+  { title: "Rita Lee - Ovelha Negra", keywords: ["rita lee", "ritalee", "ovelha negra"] },
+  { title: "Blitz - A Dois Passos do Paraiso", keywords: ["blitz", "dois passos", "paraiso"] },
+  { title: "Cassia Eller - Palavras ao Vento", keywords: ["cassia eller", "cassiaeller", "palavras ao vento"] },
+  { title: "Cidadão Quem - Dia especial", keywords: ["cidadao quem", "dia especial", "diaespecial"] },
+  { title: "Fagner - Espumas ao vento", keywords: ["fagner", "espumas ao vento"] },
+  { title: "Falamansa - Xote dos Milagres", keywords: ["falamansa", "xote dos milagres"] },
+  {
+    title: "Geraldo Azevedo - Dona da minha cabeça",
+    keywords: ["geraldo azevedo", "geraldoazevedo", "dona da minha cabeca", "donadaminhacabeca"],
+  },
+  { title: "Kid Abelha - Casinha de Sapê", keywords: ["kid abelha", "kidabelha", "casinha de sape"] },
+  {
+    title: "Lulu Santos - Apenas mais uma de amor",
+    keywords: ["lulu santos", "lulusantos", "apenas mais uma", "pois que seja fraqueza"],
+  },
+  { title: "Maskavo - Asas", keywords: ["maskavo"] },
+  { title: "Nando Reis - Por onde Andei", keywords: ["nando reis", "nandoreis", "por onde andei"] },
+  { title: "Rastapé - Colo de Menina", keywords: ["rastape", "colo de menina"] },
+  { title: "Dazaranha - Vagabundo Confesso", keywords: ["dazaranha", "vagabundo confesso"] },
 ];
 
-function normalizeFileName(name: string): string {
-  return name.normalize("NFC").trim();
+function foldText(s: string): string {
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-function buildDriveNameToIdMap(driveFiles: { id: string; name: string }[]): Map<string, string> {
-  const map = new Map<string, string>();
-  for (const f of driveFiles) {
-    const nfc = normalizeFileName(f.name);
-    const nfd = f.name.normalize("NFD").trim();
-    map.set(nfc, f.id);
-    if (nfd !== nfc) {
-      map.set(nfd, f.id);
-    }
-  }
-  return map;
-}
+function resolveVideos(files: { id: string; name: string }[]): ResolvedVideo[] {
+  const folded = files.map((f) => ({ id: f.id, fold: foldText(f.name) }));
+  const taken = new Set<string>();
 
-function resolveVideos(driveFiles: { id: string; name: string }[]): ResolvedVideo[] {
-  const byName = buildDriveNameToIdMap(driveFiles);
   return featuredVideoMeta.map((meta) => {
-    const nfc = normalizeFileName(meta.file);
-    const nfd = meta.file.normalize("NFD").trim();
-    const driveId = byName.get(nfc) ?? byName.get(nfd) ?? null;
-    return { ...meta, driveId };
+    const foldedKeywords = meta.keywords.map(foldText).filter(Boolean);
+    let bestId: string | null = null;
+    let bestScore = 0;
+
+    for (const f of folded) {
+      if (taken.has(f.id)) continue;
+      let score = 0;
+      for (const kw of foldedKeywords) {
+        if (f.fold.includes(kw)) score++;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestId = f.id;
+      }
+    }
+
+    if (bestId) taken.add(bestId);
+    return { ...meta, youtubeId: bestId };
   });
 }
 
-function drivePreviewUrl(fileId: string): string {
-  return `https://drive.google.com/file/d/${fileId}/preview`;
+function youtubeEmbedUrl(videoId: string, autoplay: boolean): string {
+  const u = new URL(`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`);
+  u.searchParams.set("rel", "0");
+  u.searchParams.set("modestbranding", "1");
+  u.searchParams.set("playsinline", "1");
+  u.searchParams.set("iv_load_policy", "3");
+  if (autoplay) u.searchParams.set("autoplay", "1");
+  return u.toString();
 }
 
-/** Viewport lógico do iframe (16:9 interno do Drive); o cartão é 9:16 (1080×1920) para telemóvel. */
-const DRIVE_EMBED_W = 640;
-const DRIVE_EMBED_H = 360;
-/** >1 amplia e recorta a UI do preview para preencher o retângulo 9:16. */
-const DRIVE_EXTRA_ZOOM = 1.34;
-const DRIVE_SCALE_MIN = 1.22;
-const DRIVE_SCALE_MAX = 3.4;
+function PlayIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M8 5v14l11-7L8 5z" />
+    </svg>
+  );
+}
 
-/** Capas em `public/images/video-capas/` com o mesmo nome base do .mp4 (várias extensões). */
-function coverImageCandidates(videoFile: string): string[] {
-  const base = videoFile.replace(/\.mp4$/i, "");
-  const bases = [base];
-  if (base === "Nando Reis - Por onde Andei") bases.push("Nando Reis - Por onde Andei Final");
-  const exts = ["jpg", "jpeg", "JPG", "JPEG", "png", "webp"];
+/** Extensões por base: evita 404 a tentar .jpg antes de .jpeg nos “Compilado …”. */
+function extensionsForCoverBase(base: string): string[] {
+  if (base === "Compilado Esquina D" || base === "Compilado Estimada") {
+    return ["jpeg", "jpg", "JPG", "JPEG", "png", "webp"];
+  }
+  return ["jpg", "jpeg", "JPG", "JPEG", "png", "webp"];
+}
+
+/** Capas em `public/images/video-capas/` com o mesmo nome base do título do vídeo. */
+function coverImageCandidates(title: string): string[] {
+  const bases = [title];
+  if (title === "Nando Reis - Por onde Andei") bases.push("Nando Reis - Por onde Andei Final");
   const out: string[] = [];
   for (const b of bases) {
-    for (const e of exts) {
+    for (const e of extensionsForCoverBase(b)) {
       out.push(`/images/video-capas/${encodeURIComponent(b)}.${e}`);
     }
   }
   return out;
 }
 
-function DrivePosterWhileLoading({ videoFile, show }: { videoFile: string; show: boolean }) {
-  const urls = useMemo(() => coverImageCandidates(videoFile), [videoFile]);
+function PosterWhileLoading({
+  title,
+  show,
+  priority,
+}: {
+  title: string;
+  show: boolean;
+  priority?: boolean;
+}) {
+  const urls = useMemo(() => coverImageCandidates(title), [title]);
   const [idx, setIdx] = useState(0);
 
   if (!show || idx >= urls.length) return null;
@@ -95,83 +129,81 @@ function DrivePosterWhileLoading({ videoFile, show }: { videoFile: string; show:
       src={urls[idx]}
       alt=""
       fill
-      sizes="280px"
-      className="absolute inset-0 z-[1] object-cover"
+      sizes="(max-width: 1024px) 280px, 280px"
+      priority={priority}
+      className="pointer-events-none absolute inset-0 z-[1] object-cover"
       onError={() => setIdx((i) => i + 1)}
       aria-hidden
     />
   );
 }
 
-function DriveVideoFrame({
-  driveId,
-  videoFile,
+function YouTubeIframe({ videoId, title }: { videoId: string; title: string }) {
+  const [ready, setReady] = useState(false);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden rounded-[inherit] bg-black">
+      <iframe
+        title={title}
+        src={youtubeEmbedUrl(videoId, true)}
+        className={`absolute inset-0 block h-full w-full border-0 transition-opacity duration-200 ease-out ${
+          ready ? "opacity-100" : "opacity-0"
+        }`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        loading="eager"
+        onLoad={() => setReady(true)}
+      />
+    </div>
+  );
+}
+
+function VideoCardPlayer({
+  youtubeId,
   title,
   interactive,
 }: {
-  driveId: string | null;
-  videoFile: string;
+  youtubeId: string | null;
   title: string;
   interactive: boolean;
 }) {
-  const shellRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1.45);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
+  /** Só após clique no cartão interativo é que o iframe carrega e a capa some. */
+  const [revealed, setRevealed] = useState(false);
 
-  useLayoutEffect(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-
-    const update = () => {
-      const cw = shell.clientWidth;
-      const ch = shell.clientHeight;
-      if (cw < 2 || ch < 2) return;
-      const cover = Math.max(cw / DRIVE_EMBED_W, ch / DRIVE_EMBED_H);
-      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, DRIVE_SCALE_MIN), DRIVE_SCALE_MAX);
-      setScale(s);
-    };
-
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(shell);
-    return () => ro.disconnect();
-  }, []);
-
-  if (!driveId) {
+  if (!youtubeId) {
     return (
       <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-2 bg-black/60 px-4 text-center">
-        <p className="text-[0.72rem] leading-snug text-[#F3EDE5]/80">Arquivo não encontrado na pasta do Drive.</p>
-        <p className="text-[0.65rem] text-[#F3EDE5]/50">Confira se o nome do arquivo no Drive coincide com a lista do site.</p>
+        <p className="text-[0.72rem] leading-snug text-[#F3EDE5]/80">Vídeo ainda não encontrado na playlist do YouTube.</p>
+        <p className="text-[0.65rem] text-[#F3EDE5]/50">Verifique se o título no YouTube coincide com a lista do site.</p>
       </div>
     );
   }
 
+  const loadIframe = revealed && interactive;
+  const showPoster = !revealed;
+  const showPlayControl = interactive && !revealed;
+
   return (
-    <div ref={shellRef} className="relative aspect-[9/16] w-full overflow-hidden bg-black">
-      <DrivePosterWhileLoading key={videoFile} videoFile={videoFile} show={Boolean(driveId) && !iframeLoaded} />
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div
-          className="relative shrink-0"
-          style={{
-            width: DRIVE_EMBED_W,
-            height: DRIVE_EMBED_H,
-            transform: `scale(${scale})`,
-            transformOrigin: "center center",
-          }}
+    <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[inherit] bg-[#0a0a08] shadow-[inset_0_0_0_1px_rgba(242,232,220,0.06)]">
+      <PosterWhileLoading
+        key={title}
+        title={title}
+        show={showPoster}
+        priority={interactive && showPoster}
+      />
+      {showPlayControl ? (
+        <button
+          type="button"
+          className="group absolute inset-0 z-[2] flex cursor-pointer items-center justify-center bg-gradient-to-b from-black/25 via-black/35 to-black/45 transition-[background-color,backdrop-filter] duration-300 hover:from-black/35 hover:via-black/45 hover:to-black/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F3EDE5]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a2920]"
+          aria-label={`Assistir: ${title}`}
+          onClick={() => setRevealed(true)}
         >
-          <iframe
-            title={title}
-            src={drivePreviewUrl(driveId)}
-            className="absolute inset-0 block h-full w-full border-0"
-            width={DRIVE_EMBED_W}
-            height={DRIVE_EMBED_H}
-            allow="autoplay; encrypted-media; fullscreen"
-            loading="lazy"
-            onLoad={() => setIframeLoaded(true)}
-            style={{ pointerEvents: interactive ? "auto" : "none" }}
-          />
-        </div>
-      </div>
+          <span className="relative flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full border border-[#F2E8DC]/50 bg-[#5E5D45]/90 text-[#F3EDE5] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md transition-transform duration-300 ease-out group-hover:scale-105 group-active:scale-95 md:h-16 md:w-16">
+            <PlayIcon className="ml-0.5 h-7 w-7 md:h-8 md:w-8" />
+          </span>
+        </button>
+      ) : null}
+      {loadIframe ? <YouTubeIframe key={youtubeId} videoId={youtubeId} title={title} /> : null}
     </div>
   );
 }
@@ -205,7 +237,7 @@ export function Gallery() {
 
     (async () => {
       try {
-        const res = await fetch("/api/drive-gallery");
+        const res = await fetch("/api/youtube-gallery");
         const data: unknown = await res.json();
 
         if (cancelled) return;
@@ -214,7 +246,7 @@ export function Gallery() {
           const msg =
             typeof data === "object" && data !== null && "error" in data
               ? String((data as { error: string }).error)
-              : "Não foi possível carregar a lista de vídeos do Google Drive.";
+              : "Não foi possível carregar a lista de vídeos do YouTube.";
           setFetchState({ status: "error", message: msg });
           return;
         }
@@ -303,7 +335,7 @@ export function Gallery() {
                   const side = idx === 0 ? "left" : idx === 2 ? "right" : "center";
                   return (
                     <article
-                      key={`${video.file}-${side}`}
+                      key={`${video.title}-${side}`}
                       className={`absolute top-1/2 w-[17.5rem] -translate-y-1/2 rounded-[1.65rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-4 transition-all duration-500 ease-out ${
                         isCenter
                           ? "left-1/2 z-20 -translate-x-1/2 scale-[1.02] shadow-[0_34px_68px_-24px_rgba(0,0,0,0.92)]"
@@ -319,7 +351,7 @@ export function Gallery() {
                         <span className="shrink-0 text-[0.66rem] uppercase tracking-[0.12em] text-[#F3EDE5]/55">Ao vivo</span>
                       </div>
                       <div className="overflow-hidden rounded-[1.15rem] bg-[#000000]/35">
-                        <DriveVideoFrame driveId={video.driveId} videoFile={video.file} title={video.title} interactive={isCenter} />
+                        <VideoCardPlayer youtubeId={video.youtubeId} title={video.title} interactive={isCenter} />
                       </div>
                     </article>
                   );
@@ -328,7 +360,7 @@ export function Gallery() {
             ) : mobileSlide ? (
               <div className="mx-auto max-w-[19.5rem] px-11">
                 <article
-                  key={mobileSlide.file}
+                  key={mobileSlide.title}
                   className="rounded-[1.5rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-6 transition-all duration-500"
                 >
                   <div className="mb-4 flex items-start justify-between gap-3">
@@ -339,7 +371,7 @@ export function Gallery() {
                   </div>
 
                   <div className="overflow-hidden rounded-2xl bg-[#000000]/35">
-                    <DriveVideoFrame driveId={mobileSlide.driveId} videoFile={mobileSlide.file} title={mobileSlide.title} interactive />
+                    <VideoCardPlayer youtubeId={mobileSlide.youtubeId} title={mobileSlide.title} interactive />
                   </div>
                 </article>
               </div>
@@ -349,7 +381,7 @@ export function Gallery() {
               {fetchState.status === "ready" &&
                 fetchState.videos.map((video, idx) => (
                   <button
-                    key={video.file}
+                    key={video.title}
                     type="button"
                     aria-label={`Ir para o vídeo ${idx + 1}`}
                     aria-current={idx === activeIndex}
