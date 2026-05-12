@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f2e8dc;
+  --foreground: #1e1a18;
+  --accent: #a65a3a;
+  --highlight: #d9a441;
+  --secondary: #6e6b3d;
+  --card: #f6ede3;
+  --line: rgba(30, 26, 24, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+  --font-serif: var(--font-quicksand);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-nunito), Arial, sans-serif;
+  text-rendering: geometricPrecision;
+  line-height: 1.7;
+  letter-spacing: 0.005em;
+}
+
+main {
+  width: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.12;
+  background-image:
+    repeating-radial-gradient(circle at 20% 15%, rgba(30, 26, 24, 0.07) 0 0.55px, transparent 0.55px 2.8px),
+    repeating-radial-gradient(circle at 75% 60%, rgba(30, 26, 24, 0.06) 0 0.5px, transparent 0.5px 3px);
+  mix-blend-mode: multiply;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--highlight) 55%, white 45%);
+  color: var(--foreground);
+}
+
+.texture-overlay {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(166, 90, 58, 0.08) 0, rgba(166, 90, 58, 0) 38%),
+    radial-gradient(circle at 90% 72%, rgba(217, 164, 65, 0.1) 0, rgba(217, 164, 65, 0) 48%),
+    repeating-linear-gradient(
+      105deg,
+      rgba(30, 26, 24, 0.012) 0,
+      rgba(30, 26, 24, 0.012) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+}
+
+.section-shell {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.card-surface {
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--card) 88%, white 12%);
+  box-shadow: 0 14px 36px -28px rgba(30, 26, 24, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+a,
+button,
+input,
+textarea,
+select,
+video {
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 78%, white 22%);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 24%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
