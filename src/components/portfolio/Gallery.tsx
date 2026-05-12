@@ -61,11 +61,11 @@ function drivePreviewUrl(fileId: string): string {
   return `https://drive.google.com/file/d/${fileId}/preview`;
 }
 
-/** Viewport lógico do iframe (16:9); o scale em volta recorta a UI do Drive e preenche o cartão 9:16. */
+/** Viewport lógico do iframe (16:9); o scale recorta um pouco a UI do Drive para preencher o cartão 16:9. */
 const DRIVE_EMBED_W = 640;
 const DRIVE_EMBED_H = 360;
-/** >1 “entra” mais no iframe e corta barras / chrome do preview. */
-const DRIVE_EXTRA_ZOOM = 1.34;
+/** >1 corta chrome do preview; em 16:9 usa-se menos zoom do que no antigo formato vertical. */
+const DRIVE_EXTRA_ZOOM = 1.2;
 
 /** Capas em `public/images/video-capas/` com o mesmo nome base do .mp4 (várias extensões). */
 function coverImageCandidates(videoFile: string): string[] {
@@ -93,7 +93,7 @@ function DrivePosterWhileLoading({ videoFile, show }: { videoFile: string; show:
       src={urls[idx]}
       alt=""
       fill
-      sizes="280px"
+      sizes="(max-width: 1024px) 95vw, 640px"
       className="absolute inset-0 z-[1] object-cover"
       onError={() => setIdx((i) => i + 1)}
       aria-hidden
@@ -113,7 +113,7 @@ function DriveVideoFrame({
   interactive: boolean;
 }) {
   const shellRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1.45);
+  const [scale, setScale] = useState(1.12);
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   useLayoutEffect(() => {
@@ -125,7 +125,7 @@ function DriveVideoFrame({
       const ch = shell.clientHeight;
       if (cw < 2 || ch < 2) return;
       const cover = Math.max(cw / DRIVE_EMBED_W, ch / DRIVE_EMBED_H);
-      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, 1.22), 3.4);
+      const s = Math.min(Math.max(cover * DRIVE_EXTRA_ZOOM, 1.08), 2.8);
       setScale(s);
     };
 
@@ -137,7 +137,7 @@ function DriveVideoFrame({
 
   if (!driveId) {
     return (
-      <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-2 bg-black/60 px-4 text-center">
+      <div className="flex aspect-video w-full flex-col items-center justify-center gap-2 bg-black/60 px-4 py-8 text-center">
         <p className="text-[0.72rem] leading-snug text-[#F3EDE5]/80">Arquivo não encontrado na pasta do Drive.</p>
         <p className="text-[0.65rem] text-[#F3EDE5]/50">Confira se o nome do arquivo no Drive coincide com a lista do site.</p>
       </div>
@@ -145,7 +145,7 @@ function DriveVideoFrame({
   }
 
   return (
-    <div ref={shellRef} className="relative aspect-[9/16] w-full overflow-hidden bg-black">
+    <div ref={shellRef} className="relative aspect-video w-full overflow-hidden bg-black">
       <DrivePosterWhileLoading key={videoFile} videoFile={videoFile} show={Boolean(driveId) && !iframeLoaded} />
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <div
@@ -268,11 +268,11 @@ export function Gallery() {
 
       <div className="relative mx-auto max-w-5xl">
         {fetchState.status === "loading" ? (
-          <div className="mx-auto flex min-h-[22rem] max-w-md flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
+          <div className="mx-auto flex min-h-[14rem] max-w-4xl flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[16rem]">
             <p className="text-sm text-[#F3EDE5]/85">Carregando vídeos…</p>
           </div>
         ) : fetchState.status === "error" ? (
-          <div className="mx-auto flex min-h-[22rem] max-w-lg flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
+          <div className="mx-auto flex min-h-[14rem] max-w-4xl flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[16rem]">
             <p className="text-sm leading-relaxed text-[#F3EDE5]/90">{fetchState.message}</p>
           </div>
         ) : (
@@ -295,19 +295,19 @@ export function Gallery() {
             </button>
 
             {isDesktop && desktopSlides ? (
-              <div className="relative mx-auto h-[38rem] w-full max-w-4xl overflow-hidden">
+              <div className="relative mx-auto min-h-[min(22rem,calc(56vw+6rem))] w-full max-w-6xl overflow-visible py-2 md:min-h-[min(26rem,calc(48vw+8rem))]">
                 {desktopSlides.map((video, idx) => {
                   const isCenter = idx === 1;
                   const side = idx === 0 ? "left" : idx === 2 ? "right" : "center";
                   return (
                     <article
                       key={`${video.file}-${side}`}
-                      className={`absolute top-1/2 w-[17.5rem] -translate-y-1/2 rounded-[1.65rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-4 transition-all duration-500 ease-out ${
+                      className={`absolute top-1/2 -translate-y-1/2 rounded-[1.65rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-4 transition-all duration-500 ease-out ${
                         isCenter
-                          ? "left-1/2 z-20 -translate-x-1/2 scale-[1.02] shadow-[0_34px_68px_-24px_rgba(0,0,0,0.92)]"
+                          ? "left-1/2 z-20 w-[min(92vw,40rem)] -translate-x-1/2 scale-[1.02] shadow-[0_34px_68px_-24px_rgba(0,0,0,0.92)]"
                           : side === "left"
-                            ? "left-1/2 z-10 -translate-x-[98%] scale-[0.8] opacity-28 blur-[1.8px]"
-                            : "left-1/2 z-10 -translate-x-[2%] scale-[0.8] opacity-28 blur-[1.8px]"
+                            ? "left-1/2 z-10 w-[min(38vw,19rem)] -translate-x-[99.5%] scale-[0.78] opacity-28 blur-[1.8px]"
+                            : "left-1/2 z-10 w-[min(38vw,19rem)] -translate-x-[0.5%] scale-[0.78] opacity-28 blur-[1.8px]"
                       }`}
                     >
                       <div className="mb-3 flex items-start justify-between gap-3">
@@ -324,7 +324,7 @@ export function Gallery() {
                 })}
               </div>
             ) : mobileSlide ? (
-              <div className="mx-auto max-w-[19.5rem] px-11">
+              <div className="mx-auto w-full max-w-3xl px-6 sm:px-10">
                 <article
                   key={mobileSlide.file}
                   className="rounded-[1.5rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-6 transition-all duration-500"
