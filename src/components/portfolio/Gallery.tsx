@@ -18,8 +18,11 @@ type ResolvedVideo = VideoMeta & {
 };
 
 const featuredVideoMeta: VideoMeta[] = [
-  { title: "Compilado Esquina D", keywords: ["esquina d", "esquinad"] },
-  { title: "Compilado Estimada", keywords: ["estimada"] },
+  {
+    title: "Compilado Esquina D",
+    keywords: ["compilado esquina d", "compilado esquina", "esquina d", "esquinad", "esquina d."],
+  },
+  { title: "Compilado Estimada", keywords: ["compilado estimada", "compilado estim", "estimada"] },
   { title: "Rita Lee - Ovelha Negra", keywords: ["rita lee", "ritalee", "ovelha negra"] },
   { title: "Blitz - A Dois Passos do Paraiso", keywords: ["blitz", "dois passos", "paraiso"] },
   { title: "Cassia Eller - Palavras ao Vento", keywords: ["cassia eller", "cassiaeller", "palavras ao vento"] },
@@ -174,7 +177,11 @@ function VideoCardPlayer({
     return (
       <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-2 bg-black/60 px-4 text-center">
         <p className="text-[0.72rem] leading-snug text-[#F3EDE5]/80">Vídeo ainda não encontrado na playlist do YouTube.</p>
-        <p className="text-[0.65rem] text-[#F3EDE5]/50">Verifique se o título no YouTube coincide com a lista do site.</p>
+        <p className="text-[0.65rem] leading-snug text-[#F3EDE5]/50">
+          O feed público do YouTube só envia cerca de 15 vídeos; fora disso o site não os vê. Defina{" "}
+          <span className="font-mono text-[#F3EDE5]/65">YOUTUBE_API_KEY</span> no servidor (lista completa) ou os pins{" "}
+          <span className="font-mono text-[#F3EDE5]/65">YOUTUBE_PIN_*</span> para estes compilados.
+        </p>
       </div>
     );
   }
@@ -237,7 +244,7 @@ export function Gallery() {
 
     (async () => {
       try {
-        const res = await fetch("/api/youtube-gallery");
+        const res = await fetch("/api/youtube-gallery", { cache: "no-store" });
         const data: unknown = await res.json();
 
         if (cancelled) return;
