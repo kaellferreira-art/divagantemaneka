@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { fetchPlaylistViaPlaylistPage } from "@/lib/youtube-playlist-page";
 import {
   DEFAULT_PIN_COMPILADO_ESQUINA_D,
   DEFAULT_PIN_COMPILADO_ESTIMADA,
@@ -8,19 +9,14 @@ import {
 
 /**
  * Playlist: `YOUTUBE_PLAYLIST_ID` (env opcional; senão usa o default do site).
- * Lista completa (opcional): `YOUTUBE_API_KEY` (YouTube Data API v3).
- * Sem API key usa o feed Atom (~15 vídeos). Os dois compilados têm pins por defeito
- * (fora do Atom); `YOUTUBE_PIN_COMPILADO_ESQUINA_D` / `YOUTUBE_PIN_COMPILADO_ESTIMADA`
- * substituem esses IDs se definidos.
+ * Ordem: YouTube Data API v3 (se `YOUTUBE_API_KEY`) → feed Atom → página HTML da playlist
+ * (`ytInitialData`, Shorts / vídeos normais). O feed Atom costuma falhar (404); o HTML é o fallback estável.
+ * Pins por defeito nos dois compilados; env `YOUTUBE_PIN_*` substitui os IDs.
  */
 
 type Video = { id: string; name: string };
 
-/**
- * Lê o feed Atom público de uma playlist do YouTube (não exige API key e funciona
- * com playlists não listadas). Devolve o ID do vídeo + título.
- * Limite: até ~15 itens — vídeos fora desse conjunto **não aparecem** no feed.
- */
+/** Feed Atom (pode devolver 404 ou ~15 itens; mantido como tentativa leve antes do HTML). */
 function parseYouTubePlaylistAtom(xml: string): Video[] {
   const out: Video[] = [];
   const entryRe = /<entry>([\s\S]*?)<\/entry>/g;
@@ -155,17 +151,31 @@ export async function GET() {
 
     if (!fromSource.length) {
       const atom = await fetchPlaylistViaAtom(playlistId);
-      if (!atom.ok) {
-        return NextResponse.json(
-          {
-            error: "Não foi possível abrir a playlist do YouTube.",
-            code: "youtube_feed_error",
-            status: atom.status,
-          },
-          { status: 502 },
-        );
+      if (atom.ok && atom.videos.length > 0) {
+        fromSource = atom.videos;
+      } else {
+        const fromPage = await fetchPlaylistViaPlaylistPage(playlistId);
+        if (fromPage?.length) {
+          fromSource = fromPage;
+        } else if (!atom.ok) {
+          return NextResponse.json(
+            {
+              error: "Não foi possível abrir a playlist do YouTube (feed e página indisponíveis).",
+              code: "youtube_feed_error",
+              status: atom.status,
+            },
+            { status: 502 },
+          );
+        } else {
+          return NextResponse.json(
+            {
+              error: "A playlist está vazia ou o formato da página mudou.",
+              code: "youtube_parse_empty",
+            },
+            { status: 502 },
+          );
+        }
       }
-      fromSource = atom.videos;
     }
 
     const files = mergeByIdPreferFirst(pinned, fromSource);
