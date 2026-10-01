@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Nota musical">
+  <rect width="32" height="32" fill="#F2E8DC"/>
+  <!-- Ícone Music-2 (Lucide) -->
+  <g
+    fill="none"
+    stroke="#A65A3A"
+    stroke-width="2.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    transform="translate(4 4)"
+  >
+    <circle cx="8" cy="18" r="4"/>
+    <path d="M12 18V2l7 4"/>
+  </g>
+</svg>

@@ -4,17 +4,21 @@
   --background: #f2e8dc;
   --foreground: #1e1a18;
   --accent: #a65a3a;
+  --accent-strong: #8b4030;
+  --accent-strong-hover: #763627;
   --highlight: #d9a441;
   --secondary: #6e6b3d;
   --card: #f6ede3;
   --line: rgba(30, 26, 24, 0.12);
+  --cream: #fff8f0;
+  --on-olive: #fff8f0;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-nunito);
-  --font-serif: var(--font-quicksand);
+  --font-serif: var(--font-fraunces);
 }
 
 html {
@@ -25,9 +29,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-nunito), Arial, sans-serif;
-  text-rendering: geometricPrecision;
-  line-height: 1.7;
-  letter-spacing: 0.005em;
+  text-rendering: optimizeLegibility;
+  line-height: 1.6;
+  letter-spacing: 0;
 }
 
 main {
@@ -94,6 +98,104 @@ body::before {
   backdrop-filter: blur(2px);
 }
 
+.type-display {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.type-title {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.type-subtitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.type-lead {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.type-body {
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.type-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.type-caption {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 768px) {
+  .type-display {
+    font-size: 3rem;
+  }
+
+  .type-title {
+    font-size: 2.25rem;
+  }
+
+  .type-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .type-lead {
+    font-size: 1.25rem;
+  }
+}
+
+.btn-cta {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.7rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.btn-cta-primary {
+  border: 1px solid color-mix(in oklab, var(--accent-strong) 80%, black 20%);
+  background: var(--accent-strong);
+  color: var(--cream);
+}
+
+.btn-cta-primary:hover {
+  background: var(--accent-strong-hover);
+}
+
+.btn-cta-secondary {
+  border: 1.5px solid color-mix(in oklab, var(--foreground) 28%, transparent);
+  background: transparent;
+  color: var(--foreground);
+}
+
+.btn-cta-secondary:hover {
+  border-color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+
 a,
 button,
 input,
@@ -110,9 +212,9 @@ video {
 }
 
 :focus-visible {
-  outline: 2px solid color-mix(in oklab, var(--accent) 78%, white 22%);
+  outline: 2px solid color-mix(in oklab, var(--accent-strong) 78%, white 22%);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 24%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent-strong) 24%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

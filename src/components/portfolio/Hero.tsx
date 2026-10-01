@@ -1,4 +1,5 @@
 import { HeroImageCarousel } from "./HeroImageCarousel";
+import { WHATSAPP_URL } from "@/lib/contact";
 
 export function Hero() {
   return (
@@ -6,32 +7,56 @@ export function Hero() {
       <div className="texture-overlay pointer-events-none absolute inset-0 opacity-25" />
 
       <div className="section-shell relative grid gap-10 md:grid-cols-[0.98fr_1.02fr] md:items-center md:gap-14">
-        <div className="order-2 space-y-7 md:space-y-8">
-          <h1 className="max-w-[13ch] font-serif text-[1.9rem] leading-[1.05] text-[#1E1A18] sm:text-[2.5rem] md:text-[3.35rem]">
-            Música ao vivo para seu evento.
-          </h1>
+        <div className="order-2 space-y-6 md:space-y-7">
+          <h1 className="type-display max-w-[13ch] text-[#1E1A18]">Música ao vivo para seu evento.</h1>
 
-          <p className="max-w-xl text-[1rem] font-semibold leading-[1.68] text-[#1E1A18] md:text-[1.06rem]">
-            Restaurantes e Bares;
-            <br />
-            Eventos Corporativos;
-            <br />
-            Eventos Privados;
-            <br />
-            <span className="text-[0.92em] italic">casamento, aniversário e reuniões.</span>
+          <p className="type-lead max-w-xl text-[#1E1A18]">
+            Mais de 600 apresentações ao vivo realizadas na Grande Florianópolis!
           </p>
 
-          <p className="max-w-xl whitespace-pre-line text-[0.98rem] leading-[1.78] text-[#1E1A18]/74 md:text-[1.05rem]">
-            {`Muito prazer! Me chamo Kaell Ferreira, sou natural da Ilha da Magia, tenho 28 anos de idade e cinco de carreira artística! Durante essa trajetória, realizei mais de 600 apresentações ao vivo na Grande Florianópolis.
-Desenvolvo um projeto eclético, voltado para música brasileira. As possibilidades de show vão de um voz e violão intimista a espetáculos envolventes com banda.`}
+          <ul className="flex max-w-xl flex-wrap gap-x-4 gap-y-2.5 type-caption font-normal leading-none text-[#1E1A18] sm:gap-x-6">
+            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Solo, duo ou banda</li>
+            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Repertório direcionado</li>
+            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Sonorização inclusa</li>
+          </ul>
+
+          <ul className="flex max-w-xl flex-col gap-3">
+            <li className="space-y-0.5">
+              <p className="type-subtitle text-[#1E1A18]">Privados</p>
+              <p className="type-caption font-normal text-[#1E1A18]">
+                Corporativo, Aniversário, Chá de bebê, Festa infantil, &quot;Happy hour&quot;, Festa de fim de ano e
+                Réveillon
+              </p>
+            </li>
+            <li className="space-y-0.5">
+              <p className="type-subtitle text-[#1E1A18]">Cerimonial e Confraternização</p>
+              <p className="type-caption font-normal text-[#1E1A18]">
+                Repertório direcionado e Composição personalizada
+              </p>
+            </li>
+            <li>
+              <p className="type-subtitle text-[#1E1A18]">Restaurantes, Bares e Pubs</p>
+            </li>
+          </ul>
+
+          <p className="type-body max-w-xl text-[#1E1A18]">
+            Me chamo Kaell Ferreira, tenho 29 anos e sou natural da Ilha da Magia! Interpreto clássicos da MPB, Pop, Pop
+            Rock, Samba, Samba Rock, Pagode, Forró e Reggae — em trilha ambiente ou como atração principal.
           </p>
 
-          <a
-            href="#obras"
-            className="inline-flex w-fit items-center rounded-full border border-[#A65A3A]/20 bg-[#A65A3A] px-7 py-3 text-sm font-semibold tracking-[0.01em] text-[#F2E8DC] transition-all duration-500 ease-out hover:-translate-y-0.5 hover:bg-[#975137] hover:shadow-[0_12px_28px_-20px_rgba(30,26,24,0.72)]"
-          >
-            Apresentações ao vivo
-          </a>
+          <div className="flex max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-cta btn-cta-primary w-fit"
+            >
+              Pedir orçamento
+            </a>
+            <a href="#obras" className="btn-cta btn-cta-secondary w-fit">
+              Ver apresentações
+            </a>
+          </div>
         </div>
 
         <div className="order-1">

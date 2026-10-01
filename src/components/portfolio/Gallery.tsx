@@ -233,11 +233,11 @@ export function Gallery() {
     <div className="relative mx-auto max-w-5xl">
         {fetchState.status === "loading" ? (
           <div className="mx-auto flex min-h-[22rem] max-w-md flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
-            <p className="text-sm text-[#F3EDE5]/85">Carregando vídeos…</p>
+            <p className="type-body text-[#FFF8F0]">Carregando vídeos…</p>
           </div>
         ) : fetchState.status === "error" ? (
           <div className="mx-auto flex min-h-[22rem] max-w-lg flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
-            <p className="text-sm leading-relaxed text-[#F3EDE5]/90">{fetchState.message}</p>
+            <p className="type-body leading-relaxed text-[#FFF8F0]">{fetchState.message}</p>
           </div>
         ) : (
           <>
@@ -274,11 +274,10 @@ export function Gallery() {
                             : "left-1/2 z-10 -translate-x-[2%] scale-[0.8] opacity-28 blur-[1.8px]"
                       }`}
                     >
-                      <div className="mb-3 flex items-start justify-between gap-3">
-                        <p className="min-w-0 text-[0.76rem] font-semibold leading-snug tracking-[0.05em] text-[#F3EDE5]/90 line-clamp-2">
+                      <div className="mb-3">
+                        <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#FFF8F0] line-clamp-2">
                           {video.title}
                         </p>
-                        <span className="shrink-0 text-[0.66rem] uppercase tracking-[0.12em] text-[#F3EDE5]/55">Ao vivo</span>
                       </div>
                       <div className="overflow-hidden rounded-[1.15rem] bg-[#000000]/35">
                         <VideoCardPlayer youtubeId={video.youtubeId} title={video.title} interactive={isCenter} />
@@ -293,11 +292,10 @@ export function Gallery() {
                   key={mobileSlide.title}
                   className="rounded-[1.5rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-6 transition-all duration-500"
                 >
-                  <div className="mb-4 flex items-start justify-between gap-3">
-                    <p className="min-w-0 text-[0.78rem] font-medium leading-snug tracking-[0.06em] text-[#F3EDE5]/90 line-clamp-3">
+                  <div className="mb-4">
+                    <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#FFF8F0] line-clamp-3">
                       {mobileSlide.title}
                     </p>
-                    <span className="shrink-0 text-[0.74rem] uppercase tracking-[0.12em] text-[#F3EDE5]/55">Ao vivo</span>
                   </div>
 
                   <div className="overflow-hidden rounded-2xl bg-[#000000]/35">

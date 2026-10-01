@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Quicksand } from "next/font/google";
+import { Fraunces, Nunito } from "next/font/google";
 
 import { JsonLd } from "@/components/JsonLd";
 import { getSiteUrl } from "@/lib/site-url";
@@ -9,13 +9,13 @@ import "./globals.css";
 const nunito = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
 });
 
-const quicksand = Quicksand({
-  variable: "--font-quicksand",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 const siteUrl = getSiteUrl();
@@ -71,8 +71,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${nunito.variable} ${quicksand.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+    <html lang="pt-BR" className={`${nunito.variable} ${fraunces.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col pb-20 md:pb-0">
         <JsonLd />
         {children}
       </body>
