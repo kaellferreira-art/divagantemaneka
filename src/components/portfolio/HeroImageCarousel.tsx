@@ -7,7 +7,6 @@ const HERO_IMAGES = [
   { src: "/images/Foto 1.jpg", alt: "Kaell Ferreira — foto de divulgação 1" },
   { src: "/images/Foto 2.jpg", alt: "Kaell Ferreira — foto de divulgação 2" },
   { src: "/images/Foto 3.JPG", alt: "Kaell Ferreira — foto de divulgação 3" },
-  { src: "/images/Foto 4.JPG", alt: "Kaell Ferreira — foto de divulgação 4" },
   { src: "/images/Foto 5.jpg", alt: "Kaell Ferreira — foto de divulgação 5" },
   { src: "/images/Foto 6.JPG", alt: "Kaell Ferreira — foto de divulgação 6" },
   { src: "/images/Foto 7.JPG", alt: "Kaell Ferreira — foto de divulgação 7" },
