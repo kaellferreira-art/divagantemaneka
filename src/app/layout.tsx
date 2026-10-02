@@ -72,7 +72,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${nunito.variable} ${fraunces.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col pb-20 md:pb-0">
+      <body className="flex min-h-full flex-col pb-24 md:pb-0">
         <JsonLd />
         {children}
       </body>

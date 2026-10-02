@@ -29,7 +29,10 @@ export function Footer() {
           <ul className="space-y-2 type-body text-[#1E1A18]">
             {navLinks.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className="transition-colors duration-500 hover:text-[#8B4030]">
+                <a
+                  href={link.href}
+                  className="inline-flex min-h-11 items-center transition-colors duration-500 hover:text-[#8B4030]"
+                >
                   {link.label}
                 </a>
               </li>
