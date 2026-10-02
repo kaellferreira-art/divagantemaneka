@@ -90,7 +90,7 @@ function DepoimentoImageCarousel({
             type="button"
             aria-label="Foto anterior"
             onClick={prev}
-            className="absolute left-2.5 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65 md:left-3"
+            className="absolute left-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65 md:left-3"
           >
             ‹
           </button>
@@ -98,12 +98,12 @@ function DepoimentoImageCarousel({
             type="button"
             aria-label="Próxima foto"
             onClick={next}
-            className="absolute right-2.5 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65 md:right-3"
+            className="absolute right-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65 md:right-3"
           >
             ›
           </button>
 
-          <div className="absolute bottom-3 left-0 right-0 z-30 flex justify-center gap-1.5 px-4">
+          <div className="carousel-dots absolute bottom-3 left-0 right-0 z-30 md:bottom-4">
             {images.map((_, i) => (
               <button
                 key={i}
@@ -111,8 +111,8 @@ function DepoimentoImageCarousel({
                 aria-label={`Ir para a foto ${i + 1} de ${len}`}
                 aria-current={i === index}
                 onClick={() => setIndex(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === index ? "w-6 bg-[#F2E8DC]" : "w-2 bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
+                className={`carousel-dot ${
+                  i === index ? "bg-[#F2E8DC]" : "bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
                 }`}
               />
             ))}
@@ -125,7 +125,7 @@ function DepoimentoImageCarousel({
 
 export function Depoimentos() {
   return (
-    <section id="depoimentos" className="section-shell py-16 md:py-24">
+    <section id="depoimentos" className="section-shell py-12 md:py-24">
       <div className="space-y-8 md:space-y-10">
         <div className="max-w-2xl">
           <h2 className="type-title text-[#1E1A18]">Depoimentos</h2>

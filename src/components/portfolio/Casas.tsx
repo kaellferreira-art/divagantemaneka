@@ -134,7 +134,7 @@ function CasasMediaCarousel() {
 
   return (
     <div
-      className="relative aspect-[9/16] w-full max-w-[15.5rem] shrink-0 overflow-hidden rounded-[1.5rem] bg-[#d8c7b7] shadow-[0_30px_70px_-50px_rgba(30,26,24,0.55)] sm:max-w-[17rem] md:max-w-[18.5rem]"
+      className="relative mx-auto aspect-[9/16] w-full max-w-[15.5rem] max-h-[52vh] shrink-0 overflow-hidden rounded-[1.5rem] bg-[#d8c7b7] shadow-[0_30px_70px_-50px_rgba(30,26,24,0.55)] sm:max-w-[17rem] md:max-h-none md:max-w-[18.5rem]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => {
@@ -172,7 +172,7 @@ function CasasMediaCarousel() {
         type="button"
         aria-label="Arte anterior"
         onClick={prev}
-        className="absolute left-2.5 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
+        className="absolute left-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
       >
         ‹
       </button>
@@ -180,12 +180,12 @@ function CasasMediaCarousel() {
         type="button"
         aria-label="Próxima arte"
         onClick={next}
-        className="absolute right-2.5 top-1/2 z-30 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
+        className="absolute right-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
       >
         ›
       </button>
 
-      <div className="absolute bottom-3 left-0 right-0 z-30 flex justify-center gap-1.5 px-4">
+      <div className="carousel-dots absolute bottom-3 left-0 right-0 z-30 md:bottom-4">
         {MEDIA_SLIDES.map((_, i) => (
           <button
             key={i}
@@ -193,8 +193,8 @@ function CasasMediaCarousel() {
             aria-label={`Ir para a arte ${i + 1} de ${len}`}
             aria-current={i === index}
             onClick={() => setIndex(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index ? "w-6 bg-[#F2E8DC]" : "w-2 bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
+            className={`carousel-dot ${
+              i === index ? "bg-[#F2E8DC]" : "bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
             }`}
           />
         ))}
@@ -207,7 +207,7 @@ export function Casas() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <section id="casas" className="section-shell py-16 md:py-24">
+    <section id="casas" className="section-shell py-12 md:py-24">
       <div className="space-y-8 rounded-[1.75rem] p-5 card-surface md:space-y-10 md:p-8">
         <div className="max-w-3xl space-y-2">
           <h2 className="type-title text-[#1E1A18]">Restaurantes, Bares e Pubs</h2>
