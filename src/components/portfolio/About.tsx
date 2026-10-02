@@ -105,8 +105,8 @@ export function About() {
 
   return (
     <>
-      <section id="sobre" className="section-shell py-16 md:py-24">
-        <div className="space-y-8 rounded-[1.75rem] p-5 card-surface md:space-y-10 md:p-8">
+      <section id="sobre" className="section-shell py-12 md:py-24">
+        <div className="space-y-7 rounded-[1.75rem] p-5 card-surface md:space-y-10 md:p-8">
           <div className="space-y-5 md:space-y-6">
             <h2 className="type-title text-[#1E1A18]">{REPERTORIOS_SECTION.title}</h2>
 
@@ -132,7 +132,7 @@ export function About() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-cta btn-cta-primary w-fit"
+              className="btn-cta btn-cta-primary w-full sm:w-fit"
             >
               Direcione seu Repertório
             </a>
@@ -142,9 +142,9 @@ export function About() {
         </div>
       </section>
 
-      <section className="section-shell py-16 md:py-24">
+      <section className="section-shell py-12 md:py-24">
         <div className="grid gap-7 rounded-[1.75rem] border border-[#F2E8DC]/30 bg-[radial-gradient(circle_at_50%_15%,rgba(151,147,117,0.9),rgba(132,130,101,0.96)_58%,rgba(119,119,91,1)_100%)] p-5 shadow-[0_14px_36px_-28px_rgba(30,26,24,0.45)] md:grid-cols-[0.88fr_1.12fr] md:items-stretch md:gap-10 md:p-8">
-          <div className="relative mx-auto aspect-[9/16] w-full max-w-[18.8rem] overflow-hidden rounded-[1.5rem] bg-[#d8c7b7] shadow-[0_30px_70px_-50px_rgba(30,26,24,0.55)] sm:max-w-[20rem] md:max-w-[22rem]">
+          <div className="media-frame-special relative mx-auto overflow-hidden rounded-[1.5rem] bg-[#d8c7b7] shadow-[0_30px_70px_-50px_rgba(30,26,24,0.55)]">
             {!playing ? (
               <>
                 <Image
@@ -240,7 +240,7 @@ export function About() {
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-cta btn-cta-primary w-fit"
+                  className="btn-cta btn-cta-primary w-full sm:w-fit"
                 >
                   Agende seu Especial
                 </a>
