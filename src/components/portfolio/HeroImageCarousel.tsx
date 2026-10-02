@@ -55,7 +55,7 @@ export function HeroImageCarousel() {
 
   return (
     <div
-      className="group relative mx-auto aspect-[9/16] w-full max-w-[21rem] overflow-hidden rounded-[2.1rem] bg-[#d8c7b7] shadow-[0_35px_65px_-45px_rgba(30,26,24,0.55)] sm:max-w-[23rem] md:max-w-[24rem] lg:max-w-[26rem]"
+      className="media-frame-hero group relative mx-auto overflow-hidden rounded-[2.1rem] bg-[#d8c7b7] shadow-[0_35px_65px_-45px_rgba(30,26,24,0.55)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => {
@@ -109,16 +109,16 @@ export function HeroImageCarousel() {
         ›
       </button>
 
-      <div className="absolute bottom-4 left-0 right-0 z-30 flex justify-center gap-2 px-4">
-        {images.map((_, i) => (
+      <div className="carousel-dots absolute bottom-3 left-0 right-0 z-30 md:bottom-4">
+        {HERO_IMAGES.map((_, i) => (
           <button
             key={i}
             type="button"
             aria-label={`Ir para a foto ${i + 1} de ${len}`}
-            aria-current={i === index ? true : undefined}
+            aria-current={i === index}
             onClick={() => setIndex(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index ? "w-7 bg-[#F2E8DC]" : "w-2 bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
+            className={`carousel-dot ${
+              i === index ? "bg-[#F2E8DC]" : "bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
             }`}
           />
         ))}
