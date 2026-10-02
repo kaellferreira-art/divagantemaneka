@@ -60,7 +60,7 @@ export function RepertoriosImageCarousel() {
             alt={img.alt}
             fill
             priority={i === 0}
-            sizes="(min-width: 768px) 72rem, 100vw"
+            sizes="(min-width: 768px) 900px, 100vw"
             className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.012] group-hover:brightness-[0.98]"
           />
         </div>

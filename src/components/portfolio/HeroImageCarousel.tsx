@@ -4,32 +4,54 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const HERO_IMAGES = [
-  { src: "/images/Foto 1.jpg", alt: "Kaell Ferreira — foto de divulgação 1" },
-  { src: "/images/Foto 2.jpg", alt: "Kaell Ferreira — foto de divulgação 2" },
-  { src: "/images/Foto 3.JPG", alt: "Kaell Ferreira — foto de divulgação 3" },
-  { src: "/images/Foto 5.jpg", alt: "Kaell Ferreira — foto de divulgação 5" },
-  { src: "/images/Foto 6.JPG", alt: "Kaell Ferreira — foto de divulgação 6" },
-  { src: "/images/Foto 7.JPG", alt: "Kaell Ferreira — foto de divulgação 7" },
-  { src: "/images/Foto 8.JPG", alt: "Kaell Ferreira — foto de divulgação 8" },
-  { src: "/images/Foto 9.JPG", alt: "Kaell Ferreira — foto de divulgação 9" },
-  { src: "/images/Foto 10.JPG", alt: "Kaell Ferreira — foto de divulgação 10" },
-  { src: "/images/Foto 11.JPG", alt: "Kaell Ferreira — foto de divulgação 11" },
+  { src: "/images/Foto 1.jpg", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 2.jpg", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 3.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 5.jpg", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 6.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 7.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 8.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 9.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 10.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
+  { src: "/images/Foto 11.JPG", alt: "Kaell Ferreira — apresentação ao vivo" },
 ] as const;
 
 export function HeroImageCarousel() {
+  const [images, setImages] = useState(() => [...HERO_IMAGES]);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
-  const len = HERO_IMAGES.length;
+  const len = images.length;
 
-  const next = useCallback(() => setIndex((i) => (i + 1) % len), [len]);
-  const prev = useCallback(() => setIndex((i) => (i - 1 + len) % len), [len]);
+  const next = useCallback(() => {
+    if (len < 1) return;
+    setIndex((i) => (i + 1) % len);
+  }, [len]);
+  const prev = useCallback(() => {
+    if (len < 1) return;
+    setIndex((i) => (i - 1 + len) % len);
+  }, [len]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || len < 2) return;
     const id = window.setInterval(next, 6500);
     return () => window.clearInterval(id);
-  }, [next, paused]);
+  }, [next, paused, len]);
+
+  useEffect(() => {
+    if (len === 0) return;
+    if (index >= len) setIndex(0);
+  }, [index, len]);
+
+  const removeBroken = useCallback((src: string) => {
+    setImages((prev) => prev.filter((img) => img.src !== src));
+  }, []);
+
+  if (len === 0) {
+    return (
+      <div className="relative mx-auto aspect-[9/16] w-full max-w-[21rem] overflow-hidden rounded-[2.1rem] bg-[#d8c7b7] sm:max-w-[23rem] md:max-w-[24rem] lg:max-w-[26rem]" />
+    );
+  }
 
   return (
     <div
@@ -48,11 +70,11 @@ export function HeroImageCarousel() {
         else if (dx < -48) next();
       }}
     >
-      {HERO_IMAGES.map((img, i) => (
+      {images.map((img, i) => (
         <div
           key={img.src}
           className={`absolute inset-0 transition-opacity duration-700 ease-out ${
-            i === index ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
+            i === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"
           }`}
         >
           <Image
@@ -62,6 +84,7 @@ export function HeroImageCarousel() {
             priority={i === 0}
             sizes="(min-width: 768px) 42vw, 100vw"
             className="object-cover object-[50%_20%] transition-transform duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-[0.98]"
+            onError={() => removeBroken(img.src)}
           />
         </div>
       ))}
@@ -87,12 +110,12 @@ export function HeroImageCarousel() {
       </button>
 
       <div className="absolute bottom-4 left-0 right-0 z-30 flex justify-center gap-2 px-4">
-        {HERO_IMAGES.map((_, i) => (
+        {images.map((_, i) => (
           <button
             key={i}
             type="button"
             aria-label={`Ir para a foto ${i + 1} de ${len}`}
-            aria-current={i === index}
+            aria-current={i === index ? true : undefined}
             onClick={() => setIndex(i)}
             className={`h-2 rounded-full transition-all duration-300 ${
               i === index ? "w-7 bg-[#F2E8DC]" : "w-2 bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
