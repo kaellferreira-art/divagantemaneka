@@ -151,12 +151,31 @@ export function Casas() {
           ))}
         </div>
 
+        {/* Mobile: nomes estáticos — sem marquee */}
+        <ul
+          className="flex flex-wrap justify-center gap-x-2.5 gap-y-2 text-center md:hidden"
+          aria-label="Casas onde toco ou já toquei"
+        >
+          {CASAS.map((casa, i) => (
+            <li
+              key={casa}
+              className="inline-flex items-center gap-2.5 text-[0.9375rem] font-semibold tracking-wide text-[var(--foreground)]"
+            >
+              {i > 0 ? (
+                <span className="text-[var(--highlight)]/55" aria-hidden>
+                  ·
+                </span>
+              ) : null}
+              {casa}
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop: marquee */}
         <div
-          className="flex w-full min-w-0 flex-col justify-center gap-4 py-2 sm:gap-5 md:gap-6"
+          className="hidden w-full min-w-0 flex-col justify-center gap-4 py-2 md:flex md:gap-6"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
-          onTouchStart={() => setPaused(true)}
-          onTouchEnd={() => setPaused(false)}
         >
           {ROWS.map((row, i) => (
             <CasasMarquee

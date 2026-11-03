@@ -85,7 +85,7 @@ export function About() {
             <div
               role="tablist"
               aria-label="Espetáculos especiais"
-              className="flex flex-wrap gap-2 border-b border-[var(--cream)]/20 pb-3"
+              className="flex flex-nowrap items-stretch gap-1 border-b border-[var(--cream)]/20 pb-3 sm:gap-2"
             >
               {ABOUT_SLIDES.map((item, i) => (
                 <button
@@ -94,7 +94,7 @@ export function About() {
                   role="tab"
                   aria-selected={i === index}
                   onClick={() => setIndex(i)}
-                  className={`rounded-sm px-3 py-2 text-sm font-semibold transition-colors ${
+                  className={`min-w-0 flex-1 rounded-sm px-1.5 py-2 text-center text-[0.68rem] font-semibold leading-tight transition-colors sm:px-3 sm:text-sm ${
                     i === index
                       ? "bg-[var(--cream)] text-[var(--stage)]"
                       : "text-[var(--cream)]/80 hover:bg-[var(--cream)]/10 hover:text-[var(--cream)]"

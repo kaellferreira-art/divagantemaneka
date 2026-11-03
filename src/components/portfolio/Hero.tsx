@@ -53,20 +53,22 @@ export function Hero() {
       />
 
       <div className="section-shell relative z-10 grid gap-8 md:grid-cols-[1.02fr_0.98fr] md:items-center md:gap-14">
-        <div className="order-2 space-y-5 md:order-1 md:space-y-7">
+        <div className="order-2 space-y-5 text-center md:order-1 md:space-y-7 md:text-left">
           <div className="space-y-3 md:space-y-4">
-            <p className="type-display max-w-[14ch] text-[var(--cream)]">Kaell Ferreira</p>
-            <h1 className="type-lead max-w-xl text-[var(--cream)]/95">
+            <p className="type-display mx-auto max-w-[14ch] text-[var(--cream)] md:mx-0">
+              Kaell Ferreira
+            </p>
+            <h1 className="type-lead mx-auto max-w-xl text-[var(--cream)]/95 md:mx-0">
               Música ao vivo para restaurantes, bares e eventos em Florianópolis.
             </h1>
           </div>
 
-          <p className="type-body max-w-xl text-[var(--cream)]/85">
+          <p className="type-body mx-auto max-w-xl text-[var(--cream)]/85 md:mx-0">
             Mais de 600 apresentações em 6 anos atuando na Grande Florianópolis — solo, duo ou banda,
             com repertório direcionado e sonorização inclusa.
           </p>
 
-          <div className="flex max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:mx-0">
             <a
               href={WHATSAPP_URL}
               target="_blank"

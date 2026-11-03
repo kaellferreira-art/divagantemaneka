@@ -468,7 +468,9 @@ export function Depoimentos() {
     <section id="depoimentos" className="section-band-warm section-open">
       <div className="section-shell space-y-6 md:space-y-10">
         <div className="flex flex-col gap-3.5 sm:gap-5 md:flex-row md:items-end md:justify-between md:gap-8">
-          <h2 className="type-title text-[var(--foreground)]">Depoimentos</h2>
+          <h2 className="type-title text-center text-[var(--foreground)] md:text-left">
+            Depoimentos
+          </h2>
           <GoogleReviewsLink />
         </div>
 

@@ -48,7 +48,9 @@ function InfoBlock({
 }) {
   return (
     <div className="space-y-4">
-      <h2 className="type-title text-[var(--foreground)]">{heading}</h2>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[1.05rem] font-bold leading-tight tracking-tight text-[var(--foreground)] whitespace-nowrap sm:text-[1.35rem] md:text-[2.25rem] md:leading-[1.15] md:whitespace-normal">
+        {heading}
+      </h2>
       <ul className="space-y-4 border-t border-[var(--line)] pt-4">
         {items.map((item) => (
           <li key={item.title} className="space-y-1">
