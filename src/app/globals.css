@@ -1,17 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f2e8dc;
-  --foreground: #1e1a18;
-  --accent: #a65a3a;
-  --accent-strong: #8b4030;
-  --accent-strong-hover: #763627;
-  --highlight: #d9a441;
-  --secondary: #6e6b3d;
-  --card: #f6ede3;
-  --line: rgba(30, 26, 24, 0.12);
-  --cream: #fff8f0;
-  --on-olive: #fff8f0;
+  /* Sistema: noite/palco (mídia) + areia quente (conversão) — âmbar de luz de palco */
+  --background: #d9d4c8;
+  --foreground: #121816;
+  --accent: #0d5c56;
+  --accent-strong: #0a4a45;
+  --accent-strong-hover: #083b37;
+  --highlight: #d4a04a;
+  --highlight-strong: #b8862f;
+  --highlight-hover: #c49238;
+  --secondary: #3d4f48;
+  --card: #e6e1d6;
+  --line: rgba(18, 24, 22, 0.12);
+  --cream: #f3efe6;
+  --on-olive: #f3efe6;
+  --stage: #121c19;
+  --stage-mid: #1a2823;
+  --dusk: #2a3530;
 }
 
 @theme inline {
@@ -26,7 +32,10 @@ html {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(ellipse 80% 50% at 90% -5%, rgba(212, 160, 74, 0.14), transparent 52%),
+    radial-gradient(ellipse 70% 45% at 5% 30%, rgba(18, 28, 25, 0.08), transparent 50%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-nunito), Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -38,7 +47,6 @@ main {
   width: 100%;
 }
 
-/* Screen-reader only: lista SEO da galeria (Tailwind `sr-only` pode não estar ativo sem preset). */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -57,11 +65,15 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 5;
-  opacity: 0.12;
+  opacity: 0.08;
   background-image:
-    repeating-radial-gradient(circle at 20% 15%, rgba(30, 26, 24, 0.07) 0 0.55px, transparent 0.55px 2.8px),
-    repeating-radial-gradient(circle at 75% 60%, rgba(30, 26, 24, 0.06) 0 0.5px, transparent 0.5px 3px);
-  mix-blend-mode: multiply;
+    repeating-linear-gradient(
+      -18deg,
+      transparent 0,
+      transparent 11px,
+      rgba(18, 24, 22, 0.035) 11px,
+      rgba(18, 24, 22, 0.035) 12px
+    );
 }
 
 ::selection {
@@ -71,15 +83,8 @@ body::before {
 
 .texture-overlay {
   background-image:
-    radial-gradient(circle at 12% 18%, rgba(166, 90, 58, 0.08) 0, rgba(166, 90, 58, 0) 38%),
-    radial-gradient(circle at 90% 72%, rgba(217, 164, 65, 0.1) 0, rgba(217, 164, 65, 0) 48%),
-    repeating-linear-gradient(
-      105deg,
-      rgba(30, 26, 24, 0.012) 0,
-      rgba(30, 26, 24, 0.012) 1px,
-      transparent 1px,
-      transparent 10px
-    );
+    radial-gradient(circle at 18% 20%, rgba(212, 160, 74, 0.1) 0, rgba(212, 160, 74, 0) 42%),
+    radial-gradient(circle at 88% 70%, rgba(13, 92, 86, 0.08) 0, rgba(13, 92, 86, 0) 46%);
 }
 
 .section-shell {
@@ -91,11 +96,81 @@ body::before {
   padding-right: 1.25rem;
 }
 
+/* Seções abertas — sem “caixa em caixa” */
+.section-open {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .section-open {
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
+  }
+}
+
+.section-band-stage {
+  position: relative;
+  background:
+    radial-gradient(ellipse 55% 45% at 85% 10%, rgba(212, 160, 74, 0.16), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(46, 90, 78, 0.4), transparent 60%),
+    linear-gradient(180deg, var(--stage-mid) 0%, var(--stage) 100%);
+  color: var(--on-olive);
+}
+
+/* Ponte noite → areia quente */
+.section-band-stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5rem;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--background));
+  z-index: 1;
+}
+
+.section-band-stage > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Seções de conversão: areia quente + facho âmbar */
+.section-band-warm {
+  background:
+    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(212, 160, 74, 0.12), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 0% 100%, rgba(18, 28, 25, 0.07), transparent 50%),
+    color-mix(in oklab, var(--card) 70%, var(--background) 30%);
+}
+
 .card-surface {
   border: 1px solid var(--line);
   background: color-mix(in oklab, var(--card) 88%, white 12%);
-  box-shadow: 0 14px 36px -28px rgba(30, 26, 24, 0.45);
-  backdrop-filter: blur(2px);
+}
+
+.depoimento-video-frame {
+  aspect-ratio: 9 / 16;
+  width: min(100%, calc(48vh * 9 / 16));
+  max-width: 17.5rem;
+  max-height: 48vh;
+}
+
+.depoimento-dots-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.depoimento-dots-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .depoimento-video-frame {
+    width: 100%;
+    max-width: 20.5rem;
+    max-height: none;
+  }
 }
 
 .type-display {
@@ -167,7 +242,7 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
+  border-radius: 0.35rem;
   padding: 0.7rem 1.6rem;
   font-size: 1rem;
   font-weight: 700;
@@ -176,13 +251,15 @@ body::before {
 }
 
 .btn-cta-primary {
-  border: 1px solid color-mix(in oklab, var(--accent-strong) 80%, black 20%);
-  background: var(--accent-strong);
-  color: var(--cream);
+  border: 1px solid color-mix(in oklab, var(--highlight-strong) 75%, black 25%);
+  background: var(--highlight);
+  color: #121816;
+  box-shadow: 0 0 0 0 rgba(212, 160, 74, 0);
 }
 
 .btn-cta-primary:hover {
-  background: var(--accent-strong-hover);
+  background: var(--highlight-hover);
+  box-shadow: 0 8px 28px -12px rgba(212, 160, 74, 0.65);
 }
 
 .btn-cta-secondary {
@@ -192,8 +269,20 @@ body::before {
 }
 
 .btn-cta-secondary:hover {
-  border-color: color-mix(in oklab, var(--foreground) 55%, transparent);
-  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  border-color: color-mix(in oklab, var(--highlight) 55%, var(--foreground) 45%);
+  background: color-mix(in oklab, var(--highlight) 10%, transparent);
+}
+
+.btn-cta-on-stage {
+  border: 1.5px solid color-mix(in oklab, var(--highlight) 55%, var(--cream) 45%);
+  background: transparent;
+  color: var(--cream);
+}
+
+.btn-cta-on-stage:hover {
+  border-color: var(--highlight);
+  background: color-mix(in oklab, var(--highlight) 16%, transparent);
+  color: var(--cream);
 }
 
 a,
@@ -212,12 +301,11 @@ video {
 }
 
 :focus-visible {
-  outline: 2px solid color-mix(in oklab, var(--accent-strong) 78%, white 22%);
+  outline: 2px solid color-mix(in oklab, var(--highlight) 78%, white 22%);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent-strong) 24%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--highlight) 24%, transparent);
 }
 
-/* Mobile media frames: aspect 9/16 capped by viewport height */
 .media-frame-hero {
   aspect-ratio: 9 / 16;
   width: 100%;
@@ -230,6 +318,17 @@ video {
   width: 100%;
   max-width: 18.8rem;
   max-height: 52vh;
+}
+
+@keyframes depoimentoFade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .carousel-dots {

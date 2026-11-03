@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CASAS = [
   "Estimada",
@@ -98,105 +98,22 @@ function CasasMarquee({
 
   return (
     <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[color-mix(in_oklab,var(--card)_88%,white_12%)] to-transparent sm:w-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[color-mix(in_oklab,var(--card)_88%,white_12%)] to-transparent sm:w-10" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[color-mix(in_oklab,var(--card)_70%,var(--background)_30%)] to-transparent sm:w-10" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[color-mix(in_oklab,var(--card)_70%,var(--background)_30%)] to-transparent sm:w-10" />
 
-      <div ref={trackRef} className="flex w-max items-center gap-x-6 py-2 will-change-transform sm:gap-x-8 sm:py-2.5 md:gap-x-10 md:py-3">
+      <div
+        ref={trackRef}
+        className="flex w-max items-center gap-x-6 py-2 will-change-transform sm:gap-x-8 sm:py-2.5 md:gap-x-10 md:py-3"
+      >
         {loop.map((casa, i) => (
           <span key={`${casa}-${i}`} className="inline-flex shrink-0 items-center gap-6 sm:gap-8 md:gap-10">
-            <span className="text-[1.0625rem] font-semibold tracking-wide text-[#1E1A18] sm:text-[1.25rem] md:text-[1.5rem] md:leading-tight">
+            <span className="text-[1.0625rem] font-semibold tracking-wide text-[var(--foreground)] sm:text-[1.25rem] md:text-[1.5rem] md:leading-tight">
               {casa}
             </span>
-            <span className="text-[1.0625rem] text-[#8B4030]/55 sm:text-[1.25rem] md:text-[1.5rem]" aria-hidden>
+            <span className="text-[1.0625rem] text-[var(--highlight)]/60 sm:text-[1.25rem] md:text-[1.5rem]" aria-hidden>
               ·
             </span>
           </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function CasasMediaCarousel() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const touchStartX = useRef<number | null>(null);
-  const len = MEDIA_SLIDES.length;
-
-  const next = useCallback(() => setIndex((i) => (i + 1) % len), [len]);
-  const prev = useCallback(() => setIndex((i) => (i - 1 + len) % len), [len]);
-
-  useEffect(() => {
-    if (paused) return;
-    const id = window.setInterval(next, 5500);
-    return () => window.clearInterval(id);
-  }, [next, paused]);
-
-  return (
-    <div
-      className="relative mx-auto aspect-[9/16] w-full max-w-[15.5rem] max-h-[52vh] shrink-0 overflow-hidden rounded-[1.5rem] bg-[#d8c7b7] shadow-[0_30px_70px_-50px_rgba(30,26,24,0.55)] sm:max-w-[17rem] md:max-h-none md:max-w-[18.5rem]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={(e) => {
-        touchStartX.current = e.touches[0]?.clientX ?? null;
-      }}
-      onTouchEnd={(e) => {
-        if (touchStartX.current == null) return;
-        const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
-        const dx = endX - touchStartX.current;
-        touchStartX.current = null;
-        if (dx > 48) prev();
-        else if (dx < -48) next();
-      }}
-    >
-      {MEDIA_SLIDES.map((item, i) => (
-        <div
-          key={item.src}
-          className={`absolute inset-0 transition-opacity duration-700 ease-out ${
-            i === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"
-          }`}
-        >
-          <Image
-            src={item.src}
-            alt={item.alt}
-            fill
-            sizes="(min-width: 768px) 28vw, 80vw"
-            quality={90}
-            priority={i === 0}
-            className="object-cover object-center"
-          />
-        </div>
-      ))}
-
-      <button
-        type="button"
-        aria-label="Arte anterior"
-        onClick={prev}
-        className="absolute left-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        aria-label="Próxima arte"
-        onClick={next}
-        className="absolute right-2.5 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/40 bg-[#1E1A18]/45 text-lg text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#1E1A18]/65"
-      >
-        ›
-      </button>
-
-      <div className="carousel-dots absolute bottom-3 left-0 right-0 z-30 md:bottom-4">
-        {MEDIA_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Ir para a arte ${i + 1} de ${len}`}
-            aria-current={i === index}
-            onClick={() => setIndex(i)}
-            className={`carousel-dot ${
-              i === index ? "bg-[#F2E8DC]" : "bg-[#F2E8DC]/45 hover:bg-[#F2E8DC]/70"
-            }`}
-          />
         ))}
       </div>
     </div>
@@ -207,35 +124,49 @@ export function Casas() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <section id="casas" className="section-shell py-12 md:py-24">
-      <div className="space-y-8 rounded-[1.75rem] p-5 card-surface md:space-y-10 md:p-8">
+    <section id="casas" className="section-band-warm section-open">
+      <div className="section-shell space-y-8 md:space-y-10">
         <div className="max-w-3xl space-y-2">
-          <h2 className="type-title text-[#1E1A18]">Restaurantes, Bares e Pubs</h2>
-          <p className="type-body text-[#1E1A18]/85">
+          <h2 className="type-title text-[var(--foreground)]">Restaurantes e Bares</h2>
+          <p className="type-body text-[var(--foreground)]/85">
             Casas onde toco ou já toquei nesses seis anos de estrada.
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:gap-8 lg:gap-12">
-          <CasasMediaCarousel />
-
-          <div
-            className="flex w-full min-w-0 flex-1 flex-col justify-center gap-4 py-2 sm:gap-5 md:gap-6 md:py-4"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onTouchStart={() => setPaused(true)}
-            onTouchEnd={() => setPaused(false)}
-          >
-            {ROWS.map((row, i) => (
-              <CasasMarquee
-                key={i}
-                items={row.items}
-                speed={row.speed}
-                reverse={row.reverse}
-                paused={paused}
+        <div
+          className="hidden md:grid md:grid-cols-6 md:gap-3"
+          aria-label="Artes de divulgação"
+        >
+          {MEDIA_SLIDES.map((item) => (
+            <div key={item.src} className="relative aspect-[9/16] overflow-hidden bg-[#c5d0ca]">
+              <Image
+                src={item.src}
+                alt={item.alt}
+                fill
+                sizes="(min-width: 768px) 14vw, 45vw"
+                quality={85}
+                className="object-cover object-center"
               />
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="flex w-full min-w-0 flex-col justify-center gap-4 py-2 sm:gap-5 md:gap-6"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={() => setPaused(true)}
+          onTouchEnd={() => setPaused(false)}
+        >
+          {ROWS.map((row, i) => (
+            <CasasMarquee
+              key={i}
+              items={row.items}
+              speed={row.speed}
+              reverse={row.reverse}
+              paused={paused}
+            />
+          ))}
         </div>
 
         <ul className="sr-only">

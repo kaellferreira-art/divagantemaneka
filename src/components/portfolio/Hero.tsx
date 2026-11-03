@@ -1,47 +1,69 @@
-import { HeroImageCarousel } from "./HeroImageCarousel";
+import Image from "next/image";
+
+import { HeroVideo } from "./HeroVideo";
 import { WHATSAPP_URL } from "@/lib/contact";
+
+const HERO_BG = {
+  src: `/images/${encodeURIComponent("Dobra 3.JPG")}`,
+  alt: "",
+} as const;
 
 export function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden py-10 sm:py-14 md:py-24 lg:py-32">
-      <div className="texture-overlay pointer-events-none absolute inset-0 opacity-25" />
+    <section id="inicio" className="relative overflow-hidden py-12 sm:py-16 md:py-24 lg:py-28">
+      <Image
+        src={HERO_BG.src}
+        alt={HERO_BG.alt}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[50%_48%] scale-110 blur-[3px] brightness-[0.65] md:blur-0 md:brightness-100"
+        aria-hidden
+      />
 
-      <div className="section-shell relative grid gap-8 md:grid-cols-[0.98fr_1.02fr] md:items-center md:gap-14">
-        <div className="order-2 space-y-5 md:space-y-7">
-          <h1 className="type-display max-w-[13ch] text-[#1E1A18]">Música ao vivo para seu evento.</h1>
+      {/* Mobile: fundo vira textura/noite — prioriza a capa do vídeo */}
+      <div
+        className="pointer-events-none absolute inset-0 md:hidden"
+        style={{
+          background: `
+            radial-gradient(ellipse 60% 45% at 80% 20%, rgba(212, 160, 74, 0.16), transparent 55%),
+            linear-gradient(180deg, rgba(8, 12, 11, 0.82) 0%, rgba(10, 16, 14, 0.9) 50%, rgba(8, 12, 11, 0.94) 100%)
+          `,
+        }}
+      />
 
-          <p className="type-lead max-w-xl text-[#1E1A18]">
-            Mais de 600 apresentações ao vivo realizadas na Grande Florianópolis!
-          </p>
+      {/* Desktop: Dobra 3 mais legível (lugar) + facho de palco */}
+      <div
+        className="pointer-events-none absolute inset-0 hidden md:block"
+        style={{
+          background: `
+            radial-gradient(ellipse 70% 55% at 85% 15%, rgba(212, 160, 74, 0.2), transparent 55%),
+            radial-gradient(ellipse 50% 40% at 10% 80%, rgba(14, 107, 99, 0.14), transparent 50%),
+            linear-gradient(90deg, rgba(8, 12, 11, 0.78) 0%, rgba(8, 12, 11, 0.55) 42%, rgba(8, 12, 11, 0.62) 100%),
+            linear-gradient(180deg, rgba(8, 12, 11, 0.45) 0%, rgba(10, 16, 14, 0.55) 100%)
+          `,
+        }}
+      />
 
-          <ul className="flex max-w-xl flex-wrap gap-x-4 gap-y-2.5 type-caption font-normal leading-none text-[#1E1A18] sm:gap-x-6">
-            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Solo, duo ou banda</li>
-            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Repertório direcionado</li>
-            <li className="w-fit border-b-2 border-[#8B4030]/55 pb-px">Sonorização inclusa</li>
-          </ul>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay md:opacity-[0.1]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        }}
+      />
 
-          <ul className="flex max-w-xl flex-col gap-3">
-            <li className="space-y-0.5">
-              <p className="type-subtitle text-[#1E1A18]">Privados</p>
-              <p className="type-caption font-normal text-[#1E1A18]">
-                Corporativo, Aniversário, Chá de bebê, Festa infantil, &quot;Happy hour&quot;, Festa de fim de ano e
-                Réveillon
-              </p>
-            </li>
-            <li className="space-y-0.5">
-              <p className="type-subtitle text-[#1E1A18]">Cerimonial e Confraternização</p>
-              <p className="type-caption font-normal text-[#1E1A18]">
-                Repertório direcionado e Composição personalizada
-              </p>
-            </li>
-            <li>
-              <p className="type-subtitle text-[#1E1A18]">Restaurantes, Bares e Pubs</p>
-            </li>
-          </ul>
+      <div className="section-shell relative z-10 grid gap-8 md:grid-cols-[1.02fr_0.98fr] md:items-center md:gap-14">
+        <div className="order-2 space-y-5 md:order-1 md:space-y-7">
+          <div className="space-y-3 md:space-y-4">
+            <p className="type-display max-w-[14ch] text-[var(--cream)]">Kaell Ferreira</p>
+            <h1 className="type-lead max-w-xl text-[var(--cream)]/95">
+              Música ao vivo para restaurantes, bares e eventos em Florianópolis.
+            </h1>
+          </div>
 
-          <p className="type-body max-w-xl text-[#1E1A18]">
-            Me chamo Kaell Ferreira, tenho 29 anos e sou natural da Ilha da Magia! Interpreto clássicos da MPB, Pop, Pop
-            Rock, Samba, Samba Rock, Pagode, Forró e Reggae — em trilha ambiente ou como atração principal.
+          <p className="type-body max-w-xl text-[var(--cream)]/85">
+            Mais de 600 apresentações em 6 anos atuando na Grande Florianópolis — solo, duo ou banda,
+            com repertório direcionado e sonorização inclusa.
           </p>
 
           <div className="flex max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -53,14 +75,14 @@ export function Hero() {
             >
               Pedir orçamento
             </a>
-            <a href="#obras" className="btn-cta btn-cta-secondary w-full sm:w-fit">
-              Ver apresentações
+            <a href="#ao-vivo" className="btn-cta btn-cta-on-stage w-full sm:w-fit">
+              Ouvir ao vivo
             </a>
           </div>
         </div>
 
-        <div className="order-1">
-          <HeroImageCarousel />
+        <div className="order-1 md:order-2">
+          <HeroVideo />
         </div>
       </div>
     </section>

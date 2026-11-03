@@ -107,11 +107,11 @@ function VideoCardPlayer({
   if (!youtubeId) {
     return (
       <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-2 bg-black/60 px-4 text-center">
-        <p className="text-[0.72rem] leading-snug text-[#F3EDE5]/80">Vídeo ainda não encontrado na playlist do YouTube.</p>
-        <p className="text-[0.65rem] leading-snug text-[#F3EDE5]/50">
+        <p className="text-[0.72rem] leading-snug text-[#f4f7f5]/80">Vídeo ainda não encontrado na playlist do YouTube.</p>
+        <p className="text-[0.65rem] leading-snug text-[#f4f7f5]/50">
           O feed público do YouTube só envia cerca de 15 vídeos; fora disso o site não os vê. Defina{" "}
-          <span className="font-mono text-[#F3EDE5]/65">YOUTUBE_API_KEY</span> no servidor (lista completa) ou os pins{" "}
-          <span className="font-mono text-[#F3EDE5]/65">YOUTUBE_PIN_*</span> para estes compilados.
+          <span className="font-mono text-[#f4f7f5]/65">YOUTUBE_API_KEY</span> no servidor (lista completa) ou os pins{" "}
+          <span className="font-mono text-[#f4f7f5]/65">YOUTUBE_PIN_*</span> para estes compilados.
         </p>
       </div>
     );
@@ -132,11 +132,11 @@ function VideoCardPlayer({
       {showPlayControl ? (
         <button
           type="button"
-          className="group absolute inset-0 z-[2] flex cursor-pointer items-center justify-center bg-gradient-to-b from-black/25 via-black/35 to-black/45 transition-[background-color,backdrop-filter] duration-300 hover:from-black/35 hover:via-black/45 hover:to-black/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F3EDE5]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a2920]"
+          className="group absolute inset-0 z-[2] flex cursor-pointer items-center justify-center bg-gradient-to-b from-black/25 via-black/35 to-black/45 transition-[background-color,backdrop-filter] duration-300 hover:from-black/35 hover:via-black/45 hover:to-black/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f4f7f5]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a2920]"
           aria-label={`Assistir: ${title}`}
           onClick={() => setRevealed(true)}
         >
-          <span className="relative flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full border border-[#F2E8DC]/50 bg-[#5E5D45]/90 text-[#F3EDE5] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md transition-transform duration-300 ease-out group-hover:scale-105 group-active:scale-95 md:h-16 md:w-16">
+          <span className="relative flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-sm border border-[#f4f7f5]/50 bg-[#243832]/90 text-[#f4f7f5] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)] backdrop-blur-md transition-transform duration-300 ease-out group-hover:scale-105 group-active:scale-95 md:h-16 md:w-16">
             <PlayIcon className="ml-0.5 h-7 w-7 md:h-8 md:w-8" />
           </span>
         </button>
@@ -233,11 +233,11 @@ export function Gallery() {
     <div className="relative mx-auto max-w-5xl">
         {fetchState.status === "loading" ? (
           <div className="mx-auto flex min-h-[22rem] max-w-md flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
-            <p className="type-body text-[#FFF8F0]">Carregando vídeos…</p>
+            <p className="type-body text-[#f4f7f5]">Carregando vídeos…</p>
           </div>
         ) : fetchState.status === "error" ? (
           <div className="mx-auto flex min-h-[22rem] max-w-lg flex-col items-center justify-center gap-3 px-6 text-center md:min-h-[38rem]">
-            <p className="type-body leading-relaxed text-[#FFF8F0]">{fetchState.message}</p>
+            <p className="type-body leading-relaxed text-[#f4f7f5]">{fetchState.message}</p>
           </div>
         ) : (
           <>
@@ -245,7 +245,7 @@ export function Gallery() {
               type="button"
               aria-label="Vídeos anteriores"
               onClick={prev}
-              className="absolute left-1 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/35 bg-[#6E6B4F]/70 text-xl text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#6E6B4F]/90 md:left-6 md:h-11 md:w-11"
+              className="absolute left-1 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-sm border border-[#f4f7f5]/35 bg-[#2a3d37]/70 text-xl text-[#f4f7f5] backdrop-blur-sm transition-colors hover:bg-[#2a3d37]/90 md:left-6 md:h-11 md:w-11"
             >
               ‹
             </button>
@@ -253,7 +253,7 @@ export function Gallery() {
               type="button"
               aria-label="Próximos vídeos"
               onClick={next}
-              className="absolute right-1 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#F2E8DC]/35 bg-[#6E6B4F]/70 text-xl text-[#F2E8DC] backdrop-blur-sm transition-colors hover:bg-[#6E6B4F]/90 md:right-6 md:h-11 md:w-11"
+              className="absolute right-1 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-sm border border-[#f4f7f5]/35 bg-[#2a3d37]/70 text-xl text-[#f4f7f5] backdrop-blur-sm transition-colors hover:bg-[#2a3d37]/90 md:right-6 md:h-11 md:w-11"
             >
               ›
             </button>
@@ -266,7 +266,7 @@ export function Gallery() {
                   return (
                     <article
                       key={`${video.title}-${side}`}
-                      className={`absolute top-1/2 w-[17.5rem] -translate-y-1/2 rounded-[1.65rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-4 transition-all duration-500 ease-out ${
+                      className={`absolute top-1/2 w-[17.5rem] -translate-y-1/2 rounded-sm border border-[#f4f7f5]/20 bg-[#243832]/88 p-4 transition-all duration-500 ease-out ${
                         isCenter
                           ? "left-1/2 z-20 -translate-x-1/2 scale-[1.02] shadow-[0_34px_68px_-24px_rgba(0,0,0,0.92)]"
                           : side === "left"
@@ -275,7 +275,7 @@ export function Gallery() {
                       }`}
                     >
                       <div className="mb-3">
-                        <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#FFF8F0] line-clamp-2">
+                        <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#f4f7f5] line-clamp-2">
                           {video.title}
                         </p>
                       </div>
@@ -290,35 +290,40 @@ export function Gallery() {
               <div className="mx-auto max-w-[19.5rem] px-11">
                 <article
                   key={mobileSlide.title}
-                  className="rounded-[1.5rem] border border-[#F2E8DC]/20 bg-[#5E5D45]/88 p-6 transition-all duration-500"
+                  className="rounded-sm border border-[#f4f7f5]/20 bg-[#243832]/88 p-6 transition-all duration-500"
                 >
                   <div className="mb-4">
-                    <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#FFF8F0] line-clamp-3">
+                    <p className="min-w-0 text-[0.875rem] font-semibold leading-snug text-[#f4f7f5] line-clamp-3">
                       {mobileSlide.title}
                     </p>
                   </div>
 
-                  <div className="overflow-hidden rounded-2xl bg-[#000000]/35">
+                  <div className="overflow-hidden rounded-sm bg-[#000000]/35">
                     <VideoCardPlayer youtubeId={mobileSlide.youtubeId} title={mobileSlide.title} interactive />
                   </div>
                 </article>
               </div>
             ) : null}
 
-            <div className="mt-7 flex justify-center gap-2">
-              {fetchState.status === "ready" &&
-                fetchState.videos.map((video, idx) => (
-                  <button
-                    key={video.title}
-                    type="button"
-                    aria-label={`Ir para o vídeo ${idx + 1}`}
-                    aria-current={idx === activeIndex}
-                    onClick={() => setActiveIndex(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      idx === activeIndex ? "w-7 bg-[#F3EDE5]" : "w-2 bg-[#F3EDE5]/35 hover:bg-[#F3EDE5]/60"
-                    }`}
-                  />
-                ))}
+            <div className="mt-7 flex flex-col items-center gap-3">
+              <p className="type-caption font-semibold text-[#f4f7f5]/75 md:hidden">
+                {activeIndex + 1} / {len}
+              </p>
+              <div className="hidden justify-center gap-2 md:flex">
+                {fetchState.status === "ready" &&
+                  fetchState.videos.map((video, idx) => (
+                    <button
+                      key={video.title}
+                      type="button"
+                      aria-label={`Ir para o vídeo ${idx + 1}`}
+                      aria-current={idx === activeIndex}
+                      onClick={() => setActiveIndex(idx)}
+                      className={`h-2 rounded-sm transition-all duration-300 ${
+                        idx === activeIndex ? "w-7 bg-[#f4f7f5]" : "w-2 bg-[#f4f7f5]/35 hover:bg-[#f4f7f5]/60"
+                      }`}
+                    />
+                  ))}
+              </div>
             </div>
           </>
         )}
